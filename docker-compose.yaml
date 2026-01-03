@@ -11,7 +11,8 @@ services:
       - DB_NAME=kakei
       - JWT_SECRET=supersecret
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - kakei-net
 
@@ -25,6 +26,11 @@ services:
       - kakei_data:/var/lib/postgresql/data
     networks:
       - kakei-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 networks:
   kakei-net:

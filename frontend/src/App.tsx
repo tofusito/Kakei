@@ -6,7 +6,7 @@ import { RefreshCw, History, ArrowUp, ArrowDown, TrendingUp, Wallet, Landmark, H
 import clsx from 'clsx';
 
 // Setup axios defaults
-axios.defaults.baseURL = import.meta.env.PROD ? '/api' : '/api';
+axios.defaults.baseURL = '/api';
 
 interface Transaction {
     id: number;
