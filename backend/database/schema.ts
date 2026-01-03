@@ -11,6 +11,7 @@ export const userSettings = pgTable('user_settings', {
     id: serial('id').primaryKey(),
     userId: integer('user_id').references(() => users.id).unique().notNull(),
     theme: text('theme', { enum: ['light', 'dark'] }).default('dark').notNull(),
+    language: text('language', { enum: ['en', 'es'] }).default('en').notNull(),
     updatedAt: timestamp('updated_at').defaultNow(),
 });
 

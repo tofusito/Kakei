@@ -8,25 +8,30 @@ import { NavButtons } from './components/NavButtons';
 import { TransactionFilters } from './components/TransactionFilters';
 import { TransactionList } from './components/TransactionList';
 import { ThemeDropdown } from './components/ThemeDropdown';
+import { EditTransactionModal } from './components/EditTransactionModal';
 
 import { useTheme } from './hooks/useTheme';
 import { useDashboard } from './hooks/useDashboard';
 import { useTransactions } from './hooks/useTransactions';
 
-import type { Category, TransactionType } from './types';
+import type { Category, TransactionType, Transaction } from './types';
 
 // Setup axios defaults
 axios.defaults.baseURL = '/api';
 
 function App() {
     // Custom Hooks
-    const { theme, setTheme, isDarkMode, showThemeMenu, setShowThemeMenu } = useTheme();
+    const { theme, setTheme, setLanguage, isDarkMode, showThemeMenu, setShowThemeMenu } = useTheme();
     const { dashboard, classificationBreakdown, fetchDashboardData } = useDashboard();
 
     // Pass refreshDashboard to useTransactions so adding a transaction updates the dashboard
     const {
         recentTransactions,
+        pagination,
+        goToPage,
         addTransaction,
+        updateTransaction,
+        deleteTransaction,
         filters
     } = useTransactions({ refreshDashboard: fetchDashboardData });
 
@@ -35,6 +40,7 @@ function App() {
     const [showQuickAdd, setShowQuickAdd] = useState(false);
     const [quickAddType, setQuickAddType] = useState<TransactionType>('expense');
     const [showBreakdown, setShowBreakdown] = useState(false);
+    const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
 
     // Fetch categories on mount
     useEffect(() => {
@@ -67,6 +73,7 @@ function App() {
                     <ThemeDropdown
                         theme={theme}
                         setTheme={setTheme}
+                        setLanguage={setLanguage}
                         showThemeMenu={showThemeMenu}
                         setShowThemeMenu={setShowThemeMenu}
                         isDarkMode={isDarkMode}
@@ -75,11 +82,11 @@ function App() {
 
                 <main className="px-6 pb-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
 
-                    <StatusCard 
-                        dashboard={dashboard} 
+                    <StatusCard
+                        dashboard={dashboard}
                         breakdown={classificationBreakdown}
                         onBreakdownClick={() => setShowBreakdown(true)}
-                        isDarkMode={isDarkMode} 
+                        isDarkMode={isDarkMode}
                     />
 
                     <NavButtons onOpenQuickAdd={handleOpenQuickAdd} isDarkMode={isDarkMode} />
@@ -100,7 +107,14 @@ function App() {
                             isDarkMode={isDarkMode}
                         />
 
-                        <TransactionList transactions={recentTransactions} isDarkMode={isDarkMode} />
+                        <TransactionList 
+                            transactions={recentTransactions} 
+                            pagination={pagination}
+                            onPageChange={goToPage}
+                            onEdit={(tr) => setEditingTransaction(tr)}
+                            onDelete={deleteTransaction}
+                            isDarkMode={isDarkMode} 
+                        />
                     </section>
                 </main>
 
@@ -109,8 +123,8 @@ function App() {
                     <div className="fixed inset-0 z-[60] flex items-center justify-center pointer-events-none">
                         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm pointer-events-auto transition-opacity" onClick={() => setShowBreakdown(false)} />
                         <div className="relative w-full max-w-md mx-4 pointer-events-auto animate-in fade-in slide-in-from-bottom-4 duration-300">
-                            <ClassificationBreakdown 
-                                data={classificationBreakdown} 
+                            <ClassificationBreakdown
+                                data={classificationBreakdown}
                                 isDarkMode={isDarkMode}
                                 onClose={() => setShowBreakdown(false)}
                                 isModal={true}
@@ -126,6 +140,20 @@ function App() {
                         categories={categories.filter(c => c.type === quickAddType)}
                         onAddTransaction={addTransaction}
                         onClose={() => setShowQuickAdd(false)}
+                        isDarkMode={isDarkMode}
+                    />
+                )}
+
+                {/* Edit Transaction Modal */}
+                {editingTransaction && (
+                    <EditTransactionModal
+                        transaction={editingTransaction}
+                        categories={categories}
+                        onSave={async (id, categoryId, amount, note, classification, createdAt) => {
+                            await updateTransaction(id, categoryId, amount, note, classification, createdAt);
+                            setEditingTransaction(null);
+                        }}
+                        onClose={() => setEditingTransaction(null)}
                         isDarkMode={isDarkMode}
                     />
                 )}

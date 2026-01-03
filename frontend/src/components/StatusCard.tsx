@@ -1,5 +1,6 @@
 import { AreaChart, Area, ResponsiveContainer } from 'recharts';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../lib/formatters';
 import type { DashboardData, ClassificationBreakdown } from '../types';
 
@@ -13,6 +14,8 @@ interface StatusCardProps {
 import { ExpenseRing } from './ExpenseRing';
 
 export function StatusCard({ dashboard, breakdown, onBreakdownClick, isDarkMode }: StatusCardProps) {
+    const { t } = useTranslation();
+
     return (
         <section className="mb-8">
             <div className={clsx(
@@ -27,7 +30,7 @@ export function StatusCard({ dashboard, breakdown, onBreakdownClick, isDarkMode 
                             "text-[10px] uppercase tracking-[0.2em] font-bold",
                             isDarkMode ? "text-zinc-500" : "text-zinc-400"
                         )}>
-                            Status
+                            {t('status.header')}
                         </span>
                         {/* Expense Ring - click to show breakdown */}
                         <ExpenseRing
@@ -74,7 +77,7 @@ export function StatusCard({ dashboard, breakdown, onBreakdownClick, isDarkMode 
                                 "text-[9px] uppercase tracking-wider block mb-1",
                                 isDarkMode ? "text-zinc-600" : "text-zinc-400"
                             )}>
-                                Income
+                                {t('status.income')}
                             </span>
                             <span className={clsx(
                                 "text-sm font-bold tabular-nums block",
@@ -88,7 +91,7 @@ export function StatusCard({ dashboard, breakdown, onBreakdownClick, isDarkMode 
                                 "text-[9px] uppercase tracking-wider block mb-1",
                                 isDarkMode ? "text-zinc-600" : "text-zinc-400"
                             )}>
-                                Expenses
+                                {t('status.expenses')}
                             </span>
                             <span className={clsx(
                                 "text-sm font-bold tabular-nums block",
@@ -102,7 +105,7 @@ export function StatusCard({ dashboard, breakdown, onBreakdownClick, isDarkMode 
                                 "text-[9px] uppercase tracking-wider block mb-1",
                                 isDarkMode ? "text-zinc-600" : "text-zinc-400"
                             )}>
-                                Investment
+                                {t('status.investment')}
                             </span>
                             <span className={clsx(
                                 "text-sm font-bold tabular-nums block",

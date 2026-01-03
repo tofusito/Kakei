@@ -7,8 +7,21 @@ interface UseTransactionsProps {
     refreshDashboard: (params: URLSearchParams) => Promise<void>;
 }
 
+interface Pagination {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+}
+
 export function useTransactions({ refreshDashboard }: UseTransactionsProps) {
     const [recentTransactions, setRecentTransactions] = useState<Transaction[]>([]);
+    const [pagination, setPagination] = useState<Pagination>({
+        page: 1,
+        limit: 10,
+        total: 0,
+        totalPages: 0
+    });
 
     // Filter state
     const [filterType, setFilterType] = useState<FilterType>('all');
@@ -25,8 +38,11 @@ export function useTransactions({ refreshDashboard }: UseTransactionsProps) {
     /**
      * Build URLSearchParams based on current filter state
      */
-    const getFilterParams = useCallback(() => {
+    const getFilterParams = useCallback((page: number = 1) => {
         const params = new URLSearchParams();
+        params.append('page', String(page));
+        params.append('limit', '10');
+        
         if (filterType !== 'all') {
             params.append('filterType', filterType);
             if (filterType === 'week') {
@@ -51,14 +67,18 @@ export function useTransactions({ refreshDashboard }: UseTransactionsProps) {
     /**
      * Fetch transactions and refresh dashboard
      */
-    const fetchData = useCallback(async () => {
+    const fetchData = useCallback(async (page: number = 1) => {
         try {
-            const params = getFilterParams();
+            const params = getFilterParams(page);
             const histRes = await axios.get(`/history?${params.toString()}`);
-            setRecentTransactions(histRes.data);
+            setRecentTransactions(histRes.data.data);
+            setPagination(histRes.data.pagination);
 
-            // Trigger dashboard refresh with same params
-            await refreshDashboard(params);
+            // Trigger dashboard refresh with same params (without pagination)
+            const dashboardParams = new URLSearchParams(params);
+            dashboardParams.delete('page');
+            dashboardParams.delete('limit');
+            await refreshDashboard(dashboardParams);
         } catch (e) {
             console.error("Fetch transactions error", e);
         }
@@ -66,8 +86,17 @@ export function useTransactions({ refreshDashboard }: UseTransactionsProps) {
 
     // Initial fetch and fetch on filter change
     useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+        fetchData(1); // Reset to page 1 when filters change
+    }, [filterType, filterWeek, filterYear, filterMonth, filterStartDate, filterEndDate, classificationFilter]);
+
+    /**
+     * Go to specific page
+     */
+    const goToPage = (page: number) => {
+        if (page >= 1 && page <= pagination.totalPages) {
+            fetchData(page);
+        }
+    };
 
     /**
      * Add a new transaction
@@ -76,24 +105,67 @@ export function useTransactions({ refreshDashboard }: UseTransactionsProps) {
         categoryId: number,
         amount: number,
         note: string,
-        classification: Classification | null
+        classification: Classification | null,
+        createdAt?: string
     ) => {
         try {
             await axios.post('/transactions', {
                 categoryId,
                 amount,
                 note,
-                classification
+                classification,
+                createdAt
             });
-            await fetchData(); // Refresh everything
+            await fetchData(1); // Go back to page 1 after adding
         } catch (e) {
             console.error("Add transaction error", e);
         }
     };
 
+    /**
+     * Update a transaction
+     */
+    const updateTransaction = async (
+        id: number,
+        categoryId: number,
+        amount: number,
+        note: string,
+        classification: Classification | null,
+        createdAt?: string
+    ) => {
+        try {
+            await axios.put(`/transactions/${id}`, {
+                categoryId,
+                amount,
+                note,
+                classification,
+                createdAt
+            });
+            await fetchData(pagination.page); // Stay on current page
+        } catch (e) {
+            console.error("Update transaction error", e);
+        }
+    };
+
+    /**
+     * Delete a transaction
+     */
+    const deleteTransaction = async (id: number) => {
+        try {
+            await axios.delete(`/transactions/${id}`);
+            await fetchData(pagination.page); // Stay on current page
+        } catch (e) {
+            console.error("Delete transaction error", e);
+        }
+    };
+
     return {
         recentTransactions,
+        pagination,
+        goToPage,
         addTransaction,
+        updateTransaction,
+        deleteTransaction,
         filters: {
             filterType, setFilterType,
             filterMonth, setFilterMonth,
@@ -105,6 +177,6 @@ export function useTransactions({ refreshDashboard }: UseTransactionsProps) {
             classificationFilter, setClassificationFilter,
             showClassificationMenu, setShowClassificationMenu
         },
-        refreshData: fetchData
+        refreshData: () => fetchData(pagination.page)
     };
 }

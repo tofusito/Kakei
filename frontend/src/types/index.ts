@@ -2,6 +2,7 @@
 
 export interface Transaction {
     id: number;
+    categoryId?: number;
     amount: string;
     note: string | null;
     classification: Classification | null;

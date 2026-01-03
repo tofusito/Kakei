@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { ArrowUp, ArrowDown, TrendingUp } from 'lucide-react';
 import type { TransactionType } from '../types';
@@ -8,6 +9,7 @@ interface NavButtonsProps {
 }
 
 export function NavButtons({ onOpenQuickAdd, isDarkMode }: NavButtonsProps) {
+    const { t } = useTranslation();
     return (
         <section className="grid grid-cols-3 gap-3 mb-12">
             <button
@@ -25,7 +27,7 @@ export function NavButtons({ onOpenQuickAdd, isDarkMode }: NavButtonsProps) {
                 )}>
                     <ArrowDown size={20} />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest">Expense</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest">{t('nav.expense')}</span>
             </button>
 
             <button
@@ -43,7 +45,7 @@ export function NavButtons({ onOpenQuickAdd, isDarkMode }: NavButtonsProps) {
                 )}>
                     <ArrowUp size={20} />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest">Income</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest">{t('nav.income')}</span>
             </button>
 
             <button
@@ -61,7 +63,7 @@ export function NavButtons({ onOpenQuickAdd, isDarkMode }: NavButtonsProps) {
                 )}>
                     <TrendingUp size={20} />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest">Invest</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest">{t('nav.invest')}</span>
             </button>
         </section>
     );
