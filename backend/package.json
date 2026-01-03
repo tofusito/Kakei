@@ -1,0 +1,22 @@
+{
+  "name": "finance-backend",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "generate": "drizzle-kit generate",
+    "migrate": "drizzle-kit migrate",
+    "seed": "bun run src/seed.ts"
+  },
+  "dependencies": {
+    "elysia": "latest",
+    "drizzle-orm": "latest",
+    "postgres": "latest",
+    "@elysiajs/jwt": "latest",
+    "@elysiajs/cors": "latest"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "drizzle-kit": "latest"
+  }
+}
