@@ -14,12 +14,6 @@ import { settingsRoutes } from './routes/settings';
 const app = new Elysia()
     .use(cors())
     .use(jwt({ name: 'jwt', secret: process.env.JWT_SECRET || 'secret' }))
-    .onError(({ code, error }) => {
-        return new Response(JSON.stringify({ error: String(error) }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        });
-    })
     .onStart(async () => {
         try {
             console.log('🔄 Running Startup Database Init...');
@@ -47,16 +41,27 @@ const app = new Elysia()
     .use(dashboardRoutes)
     .use(transactionRoutes)
     .use(settingsRoutes)
-    // 2. Static Files (assets defined in public/)
-    .use(staticPlugin({
-        assets: 'public/assets',
-        prefix: '/assets'
-    }))
-    // 3. SPA Routes - serve index.html for all non-API routes
-    .get('*', async ({ path }) => {
+    // 2. Static Files
+    .get('/assets/*', async ({ params }) => {
+        const filePath = `public/assets/${params['*']}`;
+        return Bun.file(filePath);
+    })
+    .get('/*.png', async ({ path }) => {
+        return Bun.file(`public${path}`);
+    })
+    .get('/*.ico', async ({ path }) => {
+        return Bun.file(`public${path}`);
+    })
+    .get('/*.json', async ({ path }) => {
+        return Bun.file(`public${path}`);
+    })
+    // 3. SPA Routes - serve index.html for all other routes
+    .get('*', async ({ path, set }) => {
         if (path.startsWith('/api')) {
-            return new Response('Not Found', { status: 404 });
+            set.status = 404;
+            return { error: 'Not Found' };
         }
+        set.headers['Content-Type'] = 'text/html; charset=utf-8';
         return Bun.file('public/index.html');
     })
     .listen(3000);
