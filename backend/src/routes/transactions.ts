@@ -10,6 +10,16 @@ export const transactionRoutes = new Elysia({ prefix: '/api' })
     })
     .get('/history', async ({ query }) => {
         const dateCondition = buildDateCondition(query as DateFilterQuery);
+        const classification = (query as any).classification;
+
+        // Build where clause combining date and classification filters
+        let whereClause = dateCondition;
+        
+        if (classification && classification !== 'all') {
+            whereClause = whereClause 
+                ? and(whereClause, eq(transactions.classification, classification))
+                : eq(transactions.classification, classification);
+        }
 
         return await db.select({
             id: transactions.id,
@@ -23,7 +33,7 @@ export const transactionRoutes = new Elysia({ prefix: '/api' })
         })
             .from(transactions)
             .leftJoin(categories, eq(transactions.categoryId, categories.id))
-            .where(dateCondition)
+            .where(whereClause)
             .orderBy(desc(transactions.createdAt))
             .limit(50);
     })

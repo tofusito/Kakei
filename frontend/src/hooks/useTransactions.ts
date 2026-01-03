@@ -17,8 +17,10 @@ export function useTransactions({ refreshDashboard }: UseTransactionsProps) {
     const [filterWeek, setFilterWeek] = useState(getWeekNumber(new Date()));
     const [filterStartDate, setFilterStartDate] = useState('');
     const [filterEndDate, setFilterEndDate] = useState('');
+    const [classificationFilter, setClassificationFilter] = useState<Classification | 'all'>('all');
 
     const [showFilterMenu, setShowFilterMenu] = useState(false);
+    const [showClassificationMenu, setShowClassificationMenu] = useState(false);
 
     /**
      * Build URLSearchParams based on current filter state
@@ -40,8 +42,11 @@ export function useTransactions({ refreshDashboard }: UseTransactionsProps) {
                 params.append('endDate', filterEndDate);
             }
         }
+        if (classificationFilter !== 'all') {
+            params.append('classification', classificationFilter);
+        }
         return params;
-    }, [filterType, filterWeek, filterYear, filterMonth, filterStartDate, filterEndDate]);
+    }, [filterType, filterWeek, filterYear, filterMonth, filterStartDate, filterEndDate, classificationFilter]);
 
     /**
      * Fetch transactions and refresh dashboard
@@ -96,7 +101,9 @@ export function useTransactions({ refreshDashboard }: UseTransactionsProps) {
             filterWeek, setFilterWeek,
             filterStartDate, setFilterStartDate,
             filterEndDate, setFilterEndDate,
-            showFilterMenu, setShowFilterMenu
+            showFilterMenu, setShowFilterMenu,
+            classificationFilter, setClassificationFilter,
+            showClassificationMenu, setShowClassificationMenu
         },
         refreshData: fetchData
     };

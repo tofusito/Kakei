@@ -93,6 +93,10 @@ function App() {
                             showFilterMenu={filters.showFilterMenu}
                             setShowFilterMenu={filters.setShowFilterMenu}
                             onFilterChange={filters.setFilterType}
+                            classificationFilter={filters.classificationFilter}
+                            showClassificationMenu={filters.showClassificationMenu}
+                            setShowClassificationMenu={filters.setShowClassificationMenu}
+                            onClassificationChange={filters.setClassificationFilter}
                             isDarkMode={isDarkMode}
                         />
 
