@@ -7,7 +7,15 @@
         "dark": "Oscuro",
         "english": "Inglés",
         "spanish": "Español",
-        "no_transactions": "No se encontraron transacciones"
+        "no_transactions": "No se encontraron transacciones",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "saving": "Guardando...",
+        "confirm_delete": "¿Eliminar?",
+        "showing": "Mostrando",
+        "of": "de"
     },
     "status": {
         "header": "Estado",

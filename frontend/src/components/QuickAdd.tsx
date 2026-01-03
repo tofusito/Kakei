@@ -102,8 +102,16 @@ export function QuickAdd({
     // AMOUNT ENTRY MODAL
     if (selectedCategory) {
         return (
-            <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-6 z-[100] animate-in fade-in duration-200">
-                <div className="bg-black border border-zinc-900 rounded-md p-8 w-full max-w-sm shadow-2xl relative">
+            <div className={clsx(
+                "fixed inset-0 backdrop-blur-md flex flex-col items-center justify-center p-6 z-[100] animate-in fade-in duration-200",
+                isDarkMode ? "bg-black/90" : "bg-white/90"
+            )}>
+                <div className={clsx(
+                    "rounded-md p-8 w-full max-w-sm shadow-2xl relative",
+                    isDarkMode
+                        ? "bg-black border border-zinc-900"
+                        : "bg-white border border-zinc-200"
+                )}>
 
                     <div className="flex justify-between absolute top-4 left-4 right-4 font-sans">
                         <button
@@ -111,25 +119,46 @@ export function QuickAdd({
                                 if (onSelectCategory) onSelectCategory(null as any);
                                 else setInternalSelectedCategory(null);
                             }}
-                            className="p-2 text-zinc-700 hover:text-white transition-colors"
+                            className={clsx(
+                                "p-2 transition-colors",
+                                isDarkMode
+                                    ? "text-zinc-700 hover:text-white"
+                                    : "text-zinc-400 hover:text-zinc-900"
+                            )}
                         >
                             <ArrowLeft size={16} />
                         </button>
-                        <button onClick={onClose} className="p-2 text-zinc-700 hover:text-white transition-colors">
+                        <button 
+                            onClick={onClose} 
+                            className={clsx(
+                                "p-2 transition-colors",
+                                isDarkMode
+                                    ? "text-zinc-700 hover:text-white"
+                                    : "text-zinc-400 hover:text-zinc-900"
+                            )}
+                        >
                             <X size={16} />
                         </button>
                     </div>
 
                     <div className="flex flex-col items-center mb-10 mt-4">
-                        <div className="text-zinc-400 mb-3">
+                        <div className={clsx("mb-3", isDarkMode ? "text-zinc-400" : "text-zinc-600")}>
                             <DynamicIcon name={selectedCategory.icon} size={32} />
                         </div>
-                        <h3 className="text-[10px] font-black text-zinc-500 tracking-[0.3em] uppercase">{t(`categories.${selectedCategory.name}`)}</h3>
+                        <h3 className={clsx(
+                            "text-[10px] font-black tracking-[0.3em] uppercase",
+                            isDarkMode ? "text-zinc-500" : "text-zinc-600"
+                        )}>
+                            {t(`categories.${selectedCategory.name}`)}
+                        </h3>
                     </div>
 
                     <div className="space-y-8">
                         <div className="relative">
-                            <span className="absolute left-0 top-1/2 -translate-y-1/2 text-xl font-light text-zinc-800">€</span>
+                            <span className={clsx(
+                                "absolute left-0 top-1/2 -translate-y-1/2 text-xl font-light",
+                                isDarkMode ? "text-zinc-800" : "text-zinc-300"
+                            )}>€</span>
                             <input
                                 ref={inputRef}
                                 type="number"
@@ -137,7 +166,12 @@ export function QuickAdd({
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
                                 placeholder="0.00"
-                                className="w-full bg-transparent text-5xl font-bold text-center py-4 border-b border-zinc-900 focus:border-zinc-500 focus:ring-0 outline-none transition-all placeholder:text-zinc-900 text-white tabular-nums"
+                                className={clsx(
+                                    "w-full bg-transparent text-5xl font-bold text-center py-4 border-b focus:border-zinc-500 focus:ring-0 outline-none transition-all tabular-nums",
+                                    isDarkMode
+                                        ? "border-zinc-900 text-white placeholder:text-zinc-900"
+                                        : "border-zinc-200 text-zinc-900 placeholder:text-zinc-300"
+                                )}
                                 step="0.01"
                             />
                         </div>
@@ -147,7 +181,12 @@ export function QuickAdd({
                             value={note}
                             onChange={(e) => setNote(e.target.value)}
                             placeholder={t('quick_add.note')}
-                            className="w-full bg-transparent border-b border-zinc-900 text-center text-xs font-medium text-zinc-500 py-2 focus:border-zinc-500 focus:ring-0 focus:outline-none transition-colors placeholder:text-zinc-900"
+                            className={clsx(
+                                "w-full bg-transparent border-b text-center text-xs font-medium py-2 focus:border-zinc-500 focus:ring-0 focus:outline-none transition-colors",
+                                isDarkMode
+                                    ? "border-zinc-900 text-zinc-500 placeholder:text-zinc-900"
+                                    : "border-zinc-200 text-zinc-600 placeholder:text-zinc-400"
+                            )}
                         />
 
                         <div className="space-y-6">
@@ -165,8 +204,12 @@ export function QuickAdd({
                                             className={clsx(
                                                 "flex flex-col items-center justify-center py-3 rounded-sm border transition-all",
                                                 classification === opt.id
-                                                    ? `bg-zinc-100 text-black border-zinc-100`
-                                                    : "bg-transparent border-zinc-900 text-zinc-700 hover:border-zinc-700 hover:text-zinc-500"
+                                                    ? (isDarkMode
+                                                        ? "bg-zinc-100 text-black border-zinc-100"
+                                                        : "bg-zinc-900 text-white border-zinc-900")
+                                                    : (isDarkMode
+                                                        ? "bg-transparent border-zinc-900 text-zinc-700 hover:border-zinc-700 hover:text-zinc-500"
+                                                        : "bg-transparent border-zinc-200 text-zinc-400 hover:border-zinc-400 hover:text-zinc-700")
                                             )}
                                         >
                                             <span className="mb-2"><opt.Icon size={14} strokeWidth={2} /></span>
@@ -183,8 +226,12 @@ export function QuickAdd({
                                     className={clsx(
                                         "w-12 h-12 rounded-sm transition-all flex items-center justify-center border flex-shrink-0",
                                         showDatePicker
-                                            ? "bg-zinc-100 text-black border-zinc-100"
-                                            : "bg-transparent border-zinc-900 text-zinc-700 hover:border-zinc-700 hover:text-zinc-500"
+                                            ? (isDarkMode
+                                                ? "bg-zinc-100 text-black border-zinc-100"
+                                                : "bg-zinc-900 text-white border-zinc-900")
+                                            : (isDarkMode
+                                                ? "bg-transparent border-zinc-900 text-zinc-700 hover:border-zinc-700 hover:text-zinc-500"
+                                                : "bg-transparent border-zinc-200 text-zinc-500 hover:border-zinc-400 hover:text-zinc-700")
                                     )}
                                 >
                                     <Clock size={16} strokeWidth={2} />
@@ -195,8 +242,13 @@ export function QuickAdd({
                                         value={selectedDate}
                                         onChange={(e) => setSelectedDate(e.target.value)}
                                         max={new Date().toISOString().split('T')[0]}
-                                        className="flex-1 h-12 px-3 rounded-sm border border-zinc-900 bg-black text-zinc-300 text-xs focus:border-zinc-700 focus:outline-none transition-colors"
-                                        style={{ colorScheme: 'dark' }}
+                                        className={clsx(
+                                            "flex-1 h-12 px-3 rounded-sm border text-xs focus:outline-none transition-colors",
+                                            isDarkMode
+                                                ? "border-zinc-900 bg-black text-zinc-300 focus:border-zinc-700"
+                                                : "border-zinc-200 bg-white text-zinc-700 focus:border-zinc-400"
+                                        )}
+                                        style={{ colorScheme: isDarkMode ? 'dark' : 'light' }}
                                     />
                                 ) : (
                                     <button
@@ -205,8 +257,12 @@ export function QuickAdd({
                                         className={clsx(
                                             "flex-1 h-12 rounded-sm text-[10px] font-black uppercase tracking-[0.3em] transition-all flex items-center justify-center gap-2",
                                             isValid
-                                                ? "bg-zinc-100 text-black hover:bg-white active:scale-[0.99]"
-                                                : "bg-transparent border border-zinc-900 text-zinc-800 cursor-not-allowed"
+                                                ? (isDarkMode
+                                                    ? "bg-zinc-100 text-black hover:bg-white active:scale-[0.99]"
+                                                    : "bg-zinc-900 text-white hover:bg-zinc-800 active:scale-[0.99]")
+                                                : (isDarkMode
+                                                    ? "bg-transparent border border-zinc-900 text-zinc-800 cursor-not-allowed"
+                                                    : "bg-transparent border border-zinc-200 text-zinc-400 cursor-not-allowed")
                                         )}
                                     >
                                         <Check size={14} strokeWidth={4} />
@@ -223,8 +279,12 @@ export function QuickAdd({
                                     className={clsx(
                                         "w-full h-12 rounded-sm text-[10px] font-black uppercase tracking-[0.3em] transition-all flex items-center justify-center gap-2",
                                         isValid
-                                            ? "bg-zinc-100 text-black hover:bg-white active:scale-[0.99]"
-                                            : "bg-transparent border border-zinc-900 text-zinc-800 cursor-not-allowed"
+                                            ? (isDarkMode
+                                                ? "bg-zinc-100 text-black hover:bg-white active:scale-[0.99]"
+                                                : "bg-zinc-900 text-white hover:bg-zinc-800 active:scale-[0.99]")
+                                            : (isDarkMode
+                                                ? "bg-transparent border border-zinc-900 text-zinc-800 cursor-not-allowed"
+                                                : "bg-transparent border border-zinc-200 text-zinc-400 cursor-not-allowed")
                                     )}
                                 >
                                     <Check size={14} strokeWidth={4} />

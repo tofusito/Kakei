@@ -6,6 +6,7 @@ import type { Theme } from '../types';
 interface ThemeDropdownProps {
     theme: Theme;
     setTheme: (theme: Theme) => void;
+    setLanguage: (lang: string) => void;
     showThemeMenu: boolean;
     setShowThemeMenu: (show: boolean) => void;
     isDarkMode: boolean;
@@ -14,6 +15,7 @@ interface ThemeDropdownProps {
 export function ThemeDropdown({
     theme,
     setTheme,
+    setLanguage,
     showThemeMenu,
     setShowThemeMenu,
     isDarkMode
@@ -77,7 +79,7 @@ export function ThemeDropdown({
                         <button
                             key={opt.id}
                             onClick={() => {
-                                i18n.changeLanguage(opt.id);
+                                setLanguage(opt.id);
                                 // Optional: Close menu on language change or keep open
                             }}
                             className={clsx(

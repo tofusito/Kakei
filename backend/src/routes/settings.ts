@@ -7,7 +7,7 @@ export const settingsRoutes = new Elysia({ prefix: '/api' })
     .get('/settings', async () => {
         // Get first user (for now, single-user app)
         const [user] = await db.select().from(users).limit(1);
-        if (!user) return { theme: 'dark' };
+        if (!user) return { theme: 'dark', language: 'en' };
 
         const [settings] = await db.select().from(userSettings).where(eq(userSettings.userId, user.id));
 
@@ -15,7 +15,8 @@ export const settingsRoutes = new Elysia({ prefix: '/api' })
             // Create default settings
             const [newSettings] = await db.insert(userSettings).values({
                 userId: user.id,
-                theme: 'dark'
+                theme: 'dark',
+                language: 'en'
             }).returning();
             return newSettings;
         }
@@ -23,7 +24,7 @@ export const settingsRoutes = new Elysia({ prefix: '/api' })
         return settings;
     })
     .post('/settings', async ({ body }) => {
-        const { theme } = body;
+        const { theme, language } = body;
 
         // Get first user
         const [user] = await db.select().from(users).limit(1);
@@ -34,17 +35,23 @@ export const settingsRoutes = new Elysia({ prefix: '/api' })
         if (!settings) {
             await db.insert(userSettings).values({
                 userId: user.id,
-                theme: theme as 'light' | 'dark'
+                theme: theme as 'light' | 'dark',
+                language: language as 'en' | 'es'
             });
         } else {
             await db.update(userSettings)
-                .set({ theme: theme as 'light' | 'dark', updatedAt: new Date() })
+                .set({
+                    theme: theme as 'light' | 'dark',
+                    language: language as 'en' | 'es',
+                    updatedAt: new Date()
+                })
                 .where(eq(userSettings.userId, user.id));
         }
 
-        return { success: true, theme };
+        return { success: true, theme, language };
     }, {
         body: t.Object({
-            theme: t.String()
+            theme: t.String(),
+            language: t.String()
         })
     });

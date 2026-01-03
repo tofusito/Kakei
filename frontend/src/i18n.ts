@@ -1,12 +1,19 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
 import enJSON from './locales/en.json';
 import esJSON from './locales/es.json';
 
+// Get initial language from localStorage for instant load
+const getInitialLanguage = (): string => {
+    try {
+        const saved = localStorage.getItem('language');
+        return (saved === 'en' || saved === 'es') ? saved : 'en';
+    } catch {
+        return 'en';
+    }
+};
+
 i18n
-    // detect user language
-    .use(LanguageDetector)
     // pass the i18n instance to react-i18next.
     .use(initReactI18next)
     // init i18next
@@ -16,7 +23,8 @@ i18n
             es: { translation: esJSON }
         },
         fallbackLng: 'en',
-        debug: true,
+        lng: getInitialLanguage(), // Load from localStorage for instant load
+        debug: false,
 
         interpolation: {
             escapeValue: false, // not needed for react as it escapes by default
