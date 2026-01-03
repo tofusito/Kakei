@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/logo.png" alt="Kakei Logo" width="120">
+<img src="assets/logo.png" alt="Kakei Logo" width="160">
 
 # KAKEI (家計)
 
@@ -32,8 +32,12 @@
 
 ### 💸 **Transaction Management**
 - **Frictionless Entry**: Large, accessible buttons for **Expense**, **Income**, and **Investment**.
-- **Smart Categorization**: Visual grid with translated categories (e.g., Housing/Vivienda, Salary/Salario).
-- **Edit & Delete**: Full control over your history - modify details or remove entries effortlessly.
+- **Smart Categorization**: Visual grid with translated categories:
+  - **Income**: Salary, Money Received, Sales, Investment Returns, Refunds
+  - **Expenses**: Housing, Groceries, Transport, Subscriptions, Services, Health, Leisure, Shopping, Gifts, Other
+  - **Investments**: Index Funds, ETFs, Savings
+- **Edit & Delete**: Full control over your history with inline editing and pagination (10 items per page).
+- **Date Selection**: Backdate transactions with a built-in date picker.
 - **Classification**: Categorize expenses by necessity:
   - 🟢 **Vital**: Survival needs
   - 🔵 **Useful**: Quality of life
@@ -42,14 +46,18 @@
 
 ### 📊 **Visual Dashboard**
 - **Real-time Balance**: Instant overview of your financial health.
-- **Expense Ring**: Interactive donut chart showing spending distribution.
-- **Detailed History**: Paginated transaction list with advanced filtering by **Time** (Week, Month, Year) and **Type**.
+- **Expense Ring**: Interactive donut chart showing spending distribution by classification.
+- **Advanced Filtering**: Filter transactions by:
+  - **Time Period**: All Time, This Week, This Month, This Year
+  - **Expense Type**: Vital, Useful, Treat, Waste
+- **Pagination**: Efficient browsing with 10 transactions per page.
 
 ### 📱 **Progressive Web App (PWA)**
 - **Install on Mobile**: Add to home screen on iOS/Android for a native-like experience.
-- **Custom Icon**: Beautiful 家計 logo appears on your device's home screen.
+- **Custom Icon**: Beautiful gradient circular logo appears on your device's home screen.
 - **Offline-Ready**: Works seamlessly without an internet connection.
 - **No App Store Required**: Instant access directly from your browser.
+- **Native-Like Experience**: Fullscreen mode without browser chrome.
 
 ### 🔒 **Privacy-First Architecture**
 - **Self-Hosted**: Your data lives on your machine.
@@ -125,7 +133,7 @@ docker-compose down -v
 1. Open `http://localhost:3000` (or your server's IP) in Safari
 2. Tap the **Share** button (square with arrow)
 3. Scroll down and select **"Add to Home Screen"**
-4. Confirm and enjoy the native-like experience with the 家計 icon!
+4. Confirm and enjoy the native-like experience with the beautiful circular gradient icon!
 
 #### Android (Chrome)
 1. Open `http://localhost:3000` in Chrome
