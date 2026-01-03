@@ -34,6 +34,7 @@ function App() {
     const [categories, setCategories] = useState<Category[]>([]);
     const [showQuickAdd, setShowQuickAdd] = useState(false);
     const [quickAddType, setQuickAddType] = useState<TransactionType>('expense');
+    const [showBreakdown, setShowBreakdown] = useState(false);
 
     // Fetch categories on mount
     useEffect(() => {
@@ -74,9 +75,12 @@ function App() {
 
                 <main className="px-6 pb-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
 
-                    <StatusCard dashboard={dashboard} isDarkMode={isDarkMode} />
-
-                    <ClassificationBreakdown data={classificationBreakdown} isDarkMode={isDarkMode} />
+                    <StatusCard 
+                        dashboard={dashboard} 
+                        breakdown={classificationBreakdown}
+                        onBreakdownClick={() => setShowBreakdown(true)}
+                        isDarkMode={isDarkMode} 
+                    />
 
                     <NavButtons onOpenQuickAdd={handleOpenQuickAdd} isDarkMode={isDarkMode} />
 
@@ -96,6 +100,21 @@ function App() {
                     </section>
                 </main>
 
+                {/* Expense Breakdown Modal */}
+                {showBreakdown && (
+                    <div className="fixed inset-0 z-[60] flex items-center justify-center pointer-events-none">
+                        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm pointer-events-auto transition-opacity" onClick={() => setShowBreakdown(false)} />
+                        <div className="relative w-full max-w-md mx-4 pointer-events-auto animate-in fade-in slide-in-from-bottom-4 duration-300">
+                            <ClassificationBreakdown 
+                                data={classificationBreakdown} 
+                                isDarkMode={isDarkMode}
+                                onClose={() => setShowBreakdown(false)}
+                                isModal={true}
+                            />
+                        </div>
+                    </div>
+                )}
+
                 {/* Quick Add Modal */}
                 {showQuickAdd && (
                     <QuickAdd
@@ -103,6 +122,7 @@ function App() {
                         categories={categories.filter(c => c.type === quickAddType)}
                         onAddTransaction={addTransaction}
                         onClose={() => setShowQuickAdd(false)}
+                        isDarkMode={isDarkMode}
                     />
                 )}
             </div>

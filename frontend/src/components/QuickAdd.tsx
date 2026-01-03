@@ -12,6 +12,7 @@ interface QuickAddProps {
     isDropdown?: boolean;
     onSelectCategory?: (cat: Category) => void;
     selectedCategory?: Category | null;
+    isDarkMode: boolean;
 }
 
 
@@ -22,7 +23,8 @@ export function QuickAdd({
     onClose,
     isDropdown = false,
     onSelectCategory,
-    selectedCategory: externalSelectedCategory
+    selectedCategory: externalSelectedCategory,
+    isDarkMode
 }: QuickAddProps) {
     const [internalSelectedCategory, setInternalSelectedCategory] = useState<Category | null>(null);
     const [amount, setAmount] = useState('');
@@ -189,31 +191,65 @@ export function QuickAdd({
         <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center pointer-events-none">
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm pointer-events-auto transition-opacity" onClick={onClose} />
             <div className={clsx(
-                "relative w-full max-w-md bg-white dark:bg-[#09090b]",
-                "rounded-t-2xl sm:rounded-2xl p-6 shadow-2xl",
+                "relative w-full max-w-md",
+                isDarkMode ? "bg-[#09090b] border-zinc-800" : "bg-white border-zinc-200",
+                "rounded-t-2xl sm:rounded-2xl p-6 shadow-2xl border",
                 "transform transition-all pointer-events-auto",
-                "animate-in slide-in-from-bottom-4 duration-300 border border-zinc-200 dark:border-zinc-800"
+                "animate-in slide-in-from-bottom-4 duration-300"
             )}>
                 <div className="flex justify-between items-center mb-6">
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">
+                    <span className={clsx(
+                        "text-[10px] font-black uppercase tracking-[0.2em]",
+                        isDarkMode ? "text-zinc-500" : "text-zinc-500"
+                    )}>
                         Add {type}
                     </span>
-                    <button onClick={onClose} className="p-2 -mr-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200">
+                    <button 
+                        onClick={onClose} 
+                        className={clsx(
+                            "p-2 -mr-2 transition-colors",
+                            isDarkMode 
+                                ? "text-zinc-400 hover:text-zinc-200" 
+                                : "text-zinc-400 hover:text-zinc-600"
+                        )}
+                    >
                         <X size={16} />
                     </button>
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-6">
+                <div className={clsx(
+                    type === 'expense' 
+                        ? "grid grid-cols-5 gap-8 justify-items-center" 
+                        : "flex flex-wrap gap-8 justify-center"
+                )}>
                     {categories.map((cat) => (
                         <button
                             key={cat.id}
                             onClick={() => handleCategoryClick(cat)}
-                            className="flex flex-col items-center gap-3 group"
+                            className="flex flex-col items-center gap-3 group w-[80px]"
                         >
-                            <div className="w-14 h-14 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 flex items-center justify-center transition-all group-hover:scale-95 group-active:scale-90 group-hover:border-zinc-300 dark:group-hover:border-zinc-700">
-                                <DynamicIcon name={cat.icon} size={22} className="text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-900 dark:group-hover:text-zinc-200" />
+                            <div className={clsx(
+                                "w-14 h-14 rounded-2xl border flex items-center justify-center transition-all group-hover:scale-95 group-active:scale-90",
+                                isDarkMode
+                                    ? "bg-zinc-900 border-zinc-800 group-hover:border-zinc-700"
+                                    : "bg-zinc-50 border-zinc-100 group-hover:border-zinc-300"
+                            )}>
+                                <DynamicIcon 
+                                    name={cat.icon} 
+                                    size={22} 
+                                    className={clsx(
+                                        isDarkMode
+                                            ? "text-zinc-500 group-hover:text-zinc-200"
+                                            : "text-zinc-400 group-hover:text-zinc-900"
+                                    )}
+                                />
                             </div>
-                            <span className="text-[8px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest text-center group-hover:text-zinc-900 dark:group-hover:text-zinc-200 max-w-[60px] leading-tight">
+                            <span className={clsx(
+                                "text-[8px] font-black uppercase tracking-widest text-center leading-tight transition-colors",
+                                isDarkMode
+                                    ? "text-zinc-500 group-hover:text-zinc-200"
+                                    : "text-zinc-400 group-hover:text-zinc-900"
+                            )}>
                                 {cat.name}
                             </span>
                         </button>

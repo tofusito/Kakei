@@ -1,103 +1,331 @@
 # KAKEI (家計)
 
-> **Philosophy**: Stoic. Minimalist. Frictionless.
-> "Wealth consists not in having great possessions, but in having few wants." — Epictetus
+> **Philosophy**: Stoic. Minimalist. Frictionless.  
+> *"Wealth consists not in having great possessions, but in having few wants."* — Epictetus
 
-**Kakei** is a personal finance tracker designed for the disciplined mind. It features a brutalist, OLED-optimized True Black interface (`#000000`) and a friction-free entry system for tracking Income, Expenses, and Investments.
+**Kakei** is a personal finance tracker designed for the disciplined mind. It features a brutalist, OLED-optimized interface with True Black (`#000000`) and Dark Mode themes, and a friction-free entry system for tracking Income, Expenses, and Investments.
 
-## Features
+---
 
--   ✨ **Minimalist UI**: True black (`#000000`) design optimized for OLED displays
--   💸 **Quick Transaction Entry**: Add expenses, income, and investments in seconds
--   📊 **Smart Filtering**: Filter transactions by week, month, year, or custom date range
--   🏷️ **Expense Classification**: Categorize expenses as Vital, Useful, Treat, or Waste
--   📈 **Visual Dashboard**: Track your balance with charts and summaries
--   🔒 **Privacy-First**: Self-hosted, your data stays with you
+## ✨ Features
 
-## Architecture
+### 🎨 **Elegant UI**
+- **Dual Theme Support**: True Black (OLED-optimized) and Light Mode
+- **Minimalist Design**: Clean, distraction-free interface
+- **Responsive**: Optimized for mobile and desktop
+- **Smooth Animations**: Delightful micro-interactions
+
+### 💸 **Quick Transaction Entry**
+- **One-Click Access**: Large, accessible buttons for Expense, Income, and Investment
+- **Category Selection**: Visual grid of 10 expense categories, 3 income sources, and investment options
+- **Smart Classification**: Categorize expenses as:
+  - 🟢 **Vital**: Essential needs (survival)
+  - 🔵 **Useful**: Quality of life improvements
+  - 🟡 **Treat**: Pleasures and luxuries
+  - 🔴 **Waste**: Regrettable purchases
+
+### 📊 **Visual Dashboard**
+- **Balance Overview**: Real-time balance with income, expenses, and investments
+- **Expense Ring**: Interactive donut chart showing expense distribution by classification
+- **Trend Chart**: Visual representation of daily spending patterns
+- **Smart Breakdown**: Click the expense ring to see detailed classification breakdown
+
+### 🔍 **Advanced Filtering**
+- **All Time**: View complete transaction history
+- **This Week**: Current week's transactions
+- **This Month**: Current month's transactions
+- **This Year**: Current year's transactions
+- **Custom Range**: Specific date range selection
+
+### 🔒 **Privacy-First**
+- **Self-Hosted**: Your data stays with you
+- **No Tracking**: No analytics, no telemetry
+- **Docker-Based**: Easy deployment and data persistence
+
+---
+
+## 🏗️ Architecture
 
 Kakei is distributed as a single, self-contained **Production Pack**:
--   **Frontend**: React + Vite (Built into the pack)
--   **Backend**: ElysiaJS (Serves API + Frontend)
--   **Database**: Postgres (Dedicated container)
+
+```
+┌─────────────────────────────────────┐
+│         Docker Container            │
+│  ┌───────────────────────────────┐  │
+│  │   ElysiaJS Backend (Bun)      │  │
+│  │   - API Routes                │  │
+│  │   - Static File Serving       │  │
+│  │   - Built React Frontend      │  │
+│  └───────────────────────────────┘  │
+│                ↓                     │
+│  ┌───────────────────────────────┐  │
+│  │   PostgreSQL Database         │  │
+│  │   - Drizzle ORM               │  │
+│  │   - Persistent Volume         │  │
+│  └───────────────────────────────┘  │
+└─────────────────────────────────────┘
+         Port 3000 (HTTP)
+```
 
 All traffic is handled on a single port (**3000**).
 
-## Tech Stack
+---
 
--   **Runtime**: [Bun](https://bun.sh) (All-in-one Toolkit)
--   **Backend**: [ElysiaJS](https://elysiajs.com) (High-performance framework)
--   **Frontend**: React, TailwindCSS, Lucide Icons, Recharts
--   **Database**: PostgreSQL + Drizzle ORM
+## 🛠️ Tech Stack
 
-## Installation
+### Runtime & Framework
+- **[Bun](https://bun.sh)**: All-in-one JavaScript runtime and toolkit
+- **[ElysiaJS](https://elysiajs.com)**: High-performance backend framework
 
-1.  Clone the repository:
-    ```bash
-    git clone https://github.com/yourusername/kakei.git
-    cd kakei
-    ```
+### Frontend
+- **React 18**: UI library
+- **Vite**: Build tool and dev server
+- **TailwindCSS**: Utility-first CSS framework
+- **Lucide Icons**: Beautiful, consistent icons
+- **Recharts**: Composable charting library
+- **Axios**: HTTP client
+- **clsx**: Conditional className utility
 
-2.  Start the application (App + Database):
-    ```bash
-    docker-compose up -d --build
-    ```
+### Backend & Database
+- **PostgreSQL 15**: Relational database
+- **Drizzle ORM**: Type-safe database toolkit
+- **JWT**: Authentication tokens
 
-3.  Open **http://localhost:3000**
+---
 
-> **Note**: Database migrations and seeding run automatically on startup. Your data persists in a Docker volume.
+## 🚀 Quick Start
 
-## Usage
+### Prerequisites
+- Docker & Docker Compose
+- Git
 
-### Adding Transactions
+### Installation
 
-1. Click on **Expense**, **Income**, or **Invest** buttons
-2. Select a category from the dropdown
-3. Enter the amount and a note
-4. For expenses, classify them:
-   - **Vital**: Essential needs (housing, groceries, transport)
-   - **Useful**: Quality of life improvements
-   - **Treat**: Pleasures and luxuries
-   - **Waste**: Regrettable purchases
-5. Confirm to save
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yourusername/kakei.git
+   cd kakei
+   ```
 
-### Filtering Transactions
+2. **Start the application**:
+   ```bash
+   docker-compose up -d --build
+   ```
 
-Click the filter icon (⚡) next to "Transactions" to view:
--   **All Time**: Show all transactions
--   **This Week**: Current week's transactions
--   **This Month**: Current month's transactions
--   **This Year**: Current year's transactions
--   **Specific Time**: Custom date range
+3. **Open your browser**:
+   ```
+   http://localhost:3000
+   ```
 
-## Development
+> **Note**: Database migrations and seeding run automatically on startup. Your data persists in a Docker volume (`kakei_data`).
+
+### Stopping the Application
+
+```bash
+docker-compose down
+```
+
+To remove all data (including the database):
+```bash
+docker-compose down -v
+```
+
+---
+
+## 📱 Usage Guide
+
+### 1. Dashboard Overview
+
+The dashboard displays:
+- **Balance Card**: Current balance with income, expenses, and investments
+- **Expense Ring**: Interactive visualization of expense classifications (click to expand)
+- **Quick Actions**: Three large buttons for adding transactions
+- **Transaction List**: Recent transactions with filtering options
+
+### 2. Adding Transactions
+
+#### Adding an Expense
+1. Click the **EXPENSE** button (red with down arrow)
+2. Select a category from the grid:
+   - Housing, Groceries, Transport, Subscriptions, Services
+   - Health, Leisure, Shopping, Gifts Given, Other
+3. Enter the amount (e.g., `50.00`)
+4. Add a note (e.g., "Weekly groceries")
+5. **Classify the expense**:
+   - 🟢 **Vital**: For essentials (rent, food, utilities)
+   - 🔵 **Useful**: For quality improvements (gym, courses)
+   - 🟡 **Treat**: For pleasures (dining out, entertainment)
+   - 🔴 **Waste**: For regrettable purchases
+6. Click **CONFIRM**
+
+#### Adding Income
+1. Click the **INCOME** button (green with up arrow)
+2. Select a source:
+   - Salary, Gifts Received, Refunds
+3. Enter the amount and note
+4. Click **CONFIRM**
+
+#### Adding an Investment
+1. Click the **INVEST** button (blue with trending arrow)
+2. Select investment type
+3. Enter the amount and note
+4. Click **CONFIRM**
+
+### 3. Viewing Expense Breakdown
+
+Click the **colored ring** next to "STATUS" in the balance card to open a detailed modal showing:
+- Percentage and amount for each classification
+- Visual progress bars
+- Total breakdown
+
+### 4. Filtering Transactions
+
+Click the **filter icon** (⚡) next to "TRANSACTIONS" to filter by:
+- **All Time**: Complete history
+- **This Week**: Monday to Sunday of current week
+- **This Month**: Current calendar month
+- **This Year**: January to December of current year
+- **Specific Time**: Custom date range (coming soon)
+
+### 5. Theme Switching
+
+Click the **settings icon** (⚙️) in the top-right corner to toggle between:
+- 🌙 **Dark Mode**: True black OLED-optimized theme
+- ☀️ **Light Mode**: Clean, bright theme
+
+Your theme preference is saved automatically.
+
+---
+
+## 🔧 Development
 
 ### Local Development (without Docker)
 
-**Backend:**
+#### Backend Setup
 ```bash
 cd backend
 bun install
 bun run dev
 ```
+Backend runs on `http://localhost:3000`
 
-**Frontend:**
+#### Frontend Setup
 ```bash
 cd frontend
 bun install
 bun run dev
 ```
+Frontend runs on `http://localhost:5173` (with proxy to backend)
 
-### Database Schema Changes
+### Database Management
 
+#### Generate Migration
 ```bash
 cd backend
-bun run generate  # Generate migration files
+bun run generate
 ```
 
-Migrations run automatically on container startup.
+#### Apply Migrations Manually
+```bash
+cd backend
+bun run migrate
+```
 
-## License
+> Migrations run automatically on container startup in production.
+
+### Project Structure
+
+```
+kakei/
+├── backend/
+│   ├── src/
+│   │   ├── index.ts           # Main server file
+│   │   ├── db.ts              # Database connection
+│   │   └── routes/            # API routes
+│   │       ├── dashboard.ts   # Dashboard endpoints
+│   │       ├── transactions.ts # Transaction CRUD
+│   │       └── settings.ts    # User settings
+│   ├── database/
+│   │   ├── schema.ts          # Drizzle schema
+│   │   ├── migrate.ts         # Migration runner
+│   │   ├── seed.ts            # Seed data
+│   │   └── drizzle/           # Generated migrations
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── App.tsx            # Main component
+│   │   ├── components/        # React components
+│   │   ├── hooks/             # Custom hooks
+│   │   ├── lib/               # Utilities
+│   │   └── types/             # TypeScript types
+│   └── package.json
+├── docker-compose.yaml
+├── Dockerfile
+└── README.md
+```
+
+---
+
+## 🎯 Roadmap
+
+- [ ] **Budget Goals**: Set monthly budgets per category
+- [ ] **Recurring Transactions**: Auto-add subscriptions and salaries
+- [ ] **Export Data**: CSV/JSON export functionality
+- [ ] **Multi-Currency**: Support for multiple currencies
+- [ ] **Reports**: Monthly/yearly financial reports
+- [ ] **Mobile App**: Native mobile application
+- [ ] **Backup/Restore**: Easy data backup and restoration
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
 
 Kakei is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.
-See the [LICENSE](LICENSE) file for details.
+
+This means:
+- ✅ You can use, modify, and distribute this software
+- ✅ You can use it for commercial purposes
+- ⚠️ You must disclose the source code of any modifications
+- ⚠️ If you run a modified version as a service, you must make the source available
+
+See the [LICENSE](LICENSE) file for full details.
+
+---
+
+## 🙏 Acknowledgments
+
+- **Epictetus** for the philosophical foundation
+- **Bun Team** for the amazing runtime
+- **ElysiaJS Team** for the elegant framework
+- **Tailwind Labs** for the utility-first CSS framework
+
+---
+
+## 📞 Support
+
+If you encounter any issues or have questions:
+- Open an issue on GitHub
+- Check existing issues for solutions
+- Review the documentation above
+
+---
+
+<div align="center">
+
+**Built with ❤️ and discipline**
+
+*Track your wealth. Master your wants.*
+
+</div>

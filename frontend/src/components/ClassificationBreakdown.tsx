@@ -1,12 +1,15 @@
 import clsx from 'clsx';
+import { X } from 'lucide-react';
 import type { ClassificationBreakdown } from '../types';
 
 interface ClassificationBreakdownProps {
     data: ClassificationBreakdown;
     isDarkMode: boolean;
+    onClose?: () => void;
+    isModal?: boolean;
 }
 
-export function ClassificationBreakdown({ data, isDarkMode }: ClassificationBreakdownProps) {
+export function ClassificationBreakdown({ data, isDarkMode, onClose, isModal = false }: ClassificationBreakdownProps) {
     const items = [
         { id: 'survival', label: 'Vital', value: data.survival, color: isDarkMode ? 'bg-emerald-500' : 'bg-emerald-600' },
         { id: 'quality', label: 'Useful', value: data.quality, color: isDarkMode ? 'bg-blue-500' : 'bg-blue-600' },
@@ -17,44 +20,59 @@ export function ClassificationBreakdown({ data, isDarkMode }: ClassificationBrea
     const total = data.survival + data.quality + data.pleasure + data.waste;
 
     return (
-        <section className="mb-12">
+        <section className={clsx(!isModal && "mb-8")}>
             <div className={clsx(
-                "border p-6 rounded-md shadow-sm",
+                "border rounded-md shadow-sm",
+                isModal ? "p-6" : "p-4",
                 isDarkMode
                     ? "border-zinc-900 bg-[#050505]"
                     : "border-zinc-200 bg-zinc-50"
             )}>
-                <div className="mb-5">
+                <div className={clsx("flex items-center justify-between", isModal ? "mb-5" : "mb-3")}>
                     <span className={clsx(
-                        "text-[10px] font-black uppercase tracking-[0.2em] block",
-                        isDarkMode ? "text-zinc-500" : "text-zinc-600"
+                        "font-black uppercase tracking-[0.2em] block",
+                        isModal ? "text-[10px]" : "text-[9px]",
+                        isDarkMode ? "text-zinc-500" : "text-zinc-500"
                     )}>
                         Expense Breakdown
                     </span>
+                    {isModal && onClose && (
+                        <button 
+                            onClick={onClose}
+                            className={clsx(
+                                "p-2 -mr-2 transition-colors",
+                                isDarkMode 
+                                    ? "text-zinc-400 hover:text-zinc-200" 
+                                    : "text-zinc-400 hover:text-zinc-600"
+                            )}
+                        >
+                            <X size={16} />
+                        </button>
+                    )}
                 </div>
 
-                <div className="space-y-4">
+                <div className={clsx(isModal ? "space-y-4" : "space-y-2.5")}>
                     {items.map((item) => {
                         const percentage = total > 0 ? (item.value / total) * 100 : 0;
 
                         return (
                             <div key={item.id}>
-                                <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center justify-between mb-1">
                                     <span className={clsx(
-                                        "text-[11px] font-black uppercase tracking-tight",
-                                        isDarkMode ? "text-zinc-300" : "text-zinc-700"
+                                        "text-[9px] font-black uppercase tracking-tight",
+                                        isDarkMode ? "text-zinc-400" : "text-zinc-600"
                                     )}>
                                         {item.label}
                                     </span>
                                     <span className={clsx(
-                                        "text-sm font-bold tabular-nums",
-                                        isDarkMode ? "text-zinc-200" : "text-zinc-900"
+                                        "text-xs font-bold tabular-nums",
+                                        isDarkMode ? "text-zinc-300" : "text-zinc-800"
                                     )}>
-                                        {item.value.toFixed(0)}€ <span className={clsx("text-[11px] font-medium ml-1", isDarkMode ? "text-zinc-500" : "text-zinc-600")}>({percentage.toFixed(0)}%)</span>
+                                        {item.value.toFixed(0)}€ <span className={clsx("text-[9px] font-medium ml-1", isDarkMode ? "text-zinc-600" : "text-zinc-500")}>({percentage.toFixed(0)}%)</span>
                                     </span>
                                 </div>
                                 <div className={clsx(
-                                    "h-3 rounded-full overflow-hidden",
+                                    "h-2 rounded-full overflow-hidden",
                                     isDarkMode ? "bg-zinc-900" : "bg-zinc-200"
                                 )}>
                                     <div

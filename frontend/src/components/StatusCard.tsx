@@ -1,14 +1,18 @@
 import { AreaChart, Area, ResponsiveContainer } from 'recharts';
 import clsx from 'clsx';
 import { formatCurrency } from '../lib/formatters';
-import type { DashboardData } from '../types';
+import type { DashboardData, ClassificationBreakdown } from '../types';
 
 interface StatusCardProps {
     dashboard: DashboardData;
+    breakdown: ClassificationBreakdown;
+    onBreakdownClick: () => void;
     isDarkMode: boolean;
 }
 
-export function StatusCard({ dashboard, isDarkMode }: StatusCardProps) {
+import { ExpenseRing } from './ExpenseRing';
+
+export function StatusCard({ dashboard, breakdown, onBreakdownClick, isDarkMode }: StatusCardProps) {
     return (
         <section className="mb-8">
             <div className={clsx(
@@ -25,11 +29,15 @@ export function StatusCard({ dashboard, isDarkMode }: StatusCardProps) {
                         )}>
                             Status
                         </span>
-                        {/* Optional subtle status indicator */}
-                        <div className={clsx(
-                            "w-1.5 h-1.5 rounded-full animate-pulse",
-                            dashboard.balance >= 0 ? "bg-emerald-500" : "bg-rose-500"
-                        )} />
+                        {/* Expense Ring - click to show breakdown */}
+                        <ExpenseRing
+                            survival={breakdown.survival}
+                            quality={breakdown.quality}
+                            pleasure={breakdown.pleasure}
+                            waste={breakdown.waste}
+                            onClick={onBreakdownClick}
+                            isDarkMode={isDarkMode}
+                        />
                     </div>
 
                     <div className="mb-8">
