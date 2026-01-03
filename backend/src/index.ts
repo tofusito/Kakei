@@ -3,14 +3,14 @@ import { cors } from '@elysiajs/cors';
 import { jwt } from '@elysiajs/jwt';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { users, categories, transactions } from '../database/schema';
+import { users, categories, transactions, userSettings } from '../database/schema';
 import { eq, desc, sum, and, gte, lte, sql } from 'drizzle-orm';
 import { runMigrations } from '../database/migrate';
 import { runSeed } from '../database/seed';
 
 const dbUrl = process.env.DATABASE_URL!;
 const client = postgres(dbUrl);
-const db = drizzle(client, { schema: { users, categories, transactions } });
+const db = drizzle(client, { schema: { users, categories, transactions, userSettings } });
 
 const app = new Elysia()
     .use(cors())
@@ -123,6 +123,50 @@ const app = new Elysia()
     })
     .get('/api/categories', async () => {
         return await db.select().from(categories);
+    })
+    .get('/api/settings', async () => {
+        // Get first user (for now, single-user app)
+        const [user] = await db.select().from(users).limit(1);
+        if (!user) return { theme: 'dark' };
+
+        const [settings] = await db.select().from(userSettings).where(eq(userSettings.userId, user.id));
+        
+        if (!settings) {
+            // Create default settings
+            const [newSettings] = await db.insert(userSettings).values({
+                userId: user.id,
+                theme: 'dark'
+            }).returning();
+            return newSettings;
+        }
+
+        return settings;
+    })
+    .post('/api/settings', async ({ body }) => {
+        const { theme } = body;
+        
+        // Get first user
+        const [user] = await db.select().from(users).limit(1);
+        if (!user) throw new Error('No user found');
+
+        const [settings] = await db.select().from(userSettings).where(eq(userSettings.userId, user.id));
+
+        if (!settings) {
+            await db.insert(userSettings).values({
+                userId: user.id,
+                theme: theme as 'light' | 'dark'
+            });
+        } else {
+            await db.update(userSettings)
+                .set({ theme: theme as 'light' | 'dark', updatedAt: new Date() })
+                .where(eq(userSettings.userId, user.id));
+        }
+
+        return { success: true, theme };
+    }, {
+        body: t.Object({
+            theme: t.String()
+        })
     })
     .get('/api/history', async ({ query }) => {
         const { filterType, month, year, week, startDate, endDate } = query;

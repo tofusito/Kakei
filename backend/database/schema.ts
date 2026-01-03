@@ -7,6 +7,13 @@ export const users = pgTable('users', {
     passwordHash: text('password_hash').notNull(),
 });
 
+export const userSettings = pgTable('user_settings', {
+    id: serial('id').primaryKey(),
+    userId: integer('user_id').references(() => users.id).unique().notNull(),
+    theme: text('theme', { enum: ['light', 'dark'] }).default('dark').notNull(),
+    updatedAt: timestamp('updated_at').defaultNow(),
+});
+
 export const categories = pgTable('categories', {
     id: serial('id').primaryKey(),
     name: text('name').notNull(),
