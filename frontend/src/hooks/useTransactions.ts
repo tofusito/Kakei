@@ -76,14 +76,16 @@ export function useTransactions({ refreshDashboard }: UseTransactionsProps) {
         categoryId: number,
         amount: number,
         note: string,
-        classification: Classification | null
+        classification: Classification | null,
+        createdAt?: string
     ) => {
         try {
             await axios.post('/transactions', {
                 categoryId,
                 amount,
                 note,
-                classification
+                classification,
+                createdAt
             });
             await fetchData(); // Refresh everything
         } catch (e) {

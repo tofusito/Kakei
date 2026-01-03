@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Check, ArrowLeft, Zap, Star, Trash2, Sparkles } from 'lucide-react';
+import { X, Check, ArrowLeft, Zap, Star, Trash2, Sparkles, Clock } from 'lucide-react';
 import clsx from 'clsx';
 import { DynamicIcon } from './shared/DynamicIcon';
 import type { Category, TransactionType, Classification } from '../types';
@@ -7,7 +7,7 @@ import type { Category, TransactionType, Classification } from '../types';
 interface QuickAddProps {
     type: TransactionType;
     categories: Category[];
-    onAddTransaction: (categoryId: number, amount: number, note: string, classification: Classification | null) => Promise<void>;
+    onAddTransaction: (categoryId: number, amount: number, note: string, classification: Classification | null, createdAt?: string) => Promise<void>;
     onClose: () => void;
     isDropdown?: boolean;
     onSelectCategory?: (cat: Category) => void;
@@ -30,6 +30,8 @@ export function QuickAdd({
     const [amount, setAmount] = useState('');
     const [note, setNote] = useState('');
     const [classification, setClassification] = useState<Classification | null>(null);
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     const inputRef = useRef<HTMLInputElement>(null);
 
     const selectedCategory = externalSelectedCategory || internalSelectedCategory;
@@ -52,12 +54,18 @@ export function QuickAdd({
         const numAmount = parseFloat(amount);
         if (isNaN(numAmount)) return;
 
-        await onAddTransaction(selectedCategory.id, numAmount, note, finalClassification);
+        await onAddTransaction(selectedCategory.id, numAmount, note, finalClassification, selectedDate);
 
+        // Reset form
         setAmount('');
         setNote('');
         setClassification(null);
         setInternalSelectedCategory(null);
+        setSelectedDate(new Date().toISOString().split('T')[0]);
+        setShowDatePicker(false);
+        
+        // Close modal after adding transaction
+        onClose();
     };
 
     const isExpense = type === 'expense';
@@ -166,19 +174,61 @@ export function QuickAdd({
                                 </div>
                             )}
 
-                            <button
-                                onClick={() => handleSubmit(classification)}
-                                disabled={!isValid}
-                                className={clsx(
-                                    "w-full h-12 rounded-sm text-[10px] font-black uppercase tracking-[0.3em] transition-all flex items-center justify-center gap-2",
-                                    isValid
-                                        ? "bg-zinc-100 text-black hover:bg-white active:scale-[0.99]"
-                                        : "bg-transparent border border-zinc-900 text-zinc-800 cursor-not-allowed"
+                            {/* Action Buttons */}
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => setShowDatePicker(!showDatePicker)}
+                                    className={clsx(
+                                        "w-12 h-12 rounded-sm transition-all flex items-center justify-center border flex-shrink-0",
+                                        showDatePicker
+                                            ? "bg-zinc-100 text-black border-zinc-100"
+                                            : "bg-transparent border-zinc-900 text-zinc-700 hover:border-zinc-700 hover:text-zinc-500"
+                                    )}
+                                >
+                                    <Clock size={16} strokeWidth={2} />
+                                </button>
+                                {showDatePicker ? (
+                                    <input
+                                        type="date"
+                                        value={selectedDate}
+                                        onChange={(e) => setSelectedDate(e.target.value)}
+                                        max={new Date().toISOString().split('T')[0]}
+                                        className="flex-1 h-12 px-3 rounded-sm border border-zinc-900 bg-black text-zinc-300 text-xs focus:border-zinc-700 focus:outline-none transition-colors"
+                                        style={{ colorScheme: 'dark' }}
+                                    />
+                                ) : (
+                                    <button
+                                        onClick={() => handleSubmit(classification)}
+                                        disabled={!isValid}
+                                        className={clsx(
+                                            "flex-1 h-12 rounded-sm text-[10px] font-black uppercase tracking-[0.3em] transition-all flex items-center justify-center gap-2",
+                                            isValid
+                                                ? "bg-zinc-100 text-black hover:bg-white active:scale-[0.99]"
+                                                : "bg-transparent border border-zinc-900 text-zinc-800 cursor-not-allowed"
+                                        )}
+                                    >
+                                        <Check size={14} strokeWidth={4} />
+                                        Confirm
+                                    </button>
                                 )}
-                            >
-                                <Check size={14} strokeWidth={4} />
-                                Confirm
-                            </button>
+                            </div>
+
+                            {/* Confirm button when date picker is shown */}
+                            {showDatePicker && (
+                                <button
+                                    onClick={() => handleSubmit(classification)}
+                                    disabled={!isValid}
+                                    className={clsx(
+                                        "w-full h-12 rounded-sm text-[10px] font-black uppercase tracking-[0.3em] transition-all flex items-center justify-center gap-2",
+                                        isValid
+                                            ? "bg-zinc-100 text-black hover:bg-white active:scale-[0.99]"
+                                            : "bg-transparent border border-zinc-900 text-zinc-800 cursor-not-allowed"
+                                    )}
+                                >
+                                    <Check size={14} strokeWidth={4} />
+                                    Confirm
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

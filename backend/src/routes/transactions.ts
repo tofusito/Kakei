@@ -38,14 +38,14 @@ export const transactionRoutes = new Elysia({ prefix: '/api' })
             .limit(50);
     })
     .post('/transactions', async ({ body }) => {
-        const { categoryId, amount, note, classification } = body;
+        const { categoryId, amount, note, classification, createdAt } = body;
 
         await db.insert(transactions).values({
             categoryId,
             amount: String(amount),
             note,
             classification: classification as any, // Enum type cast
-            // createdAt defaults to now() in schema
+            createdAt: createdAt ? new Date(createdAt) : undefined, // Use provided date or default to now()
         });
 
         return { success: true };
@@ -54,6 +54,7 @@ export const transactionRoutes = new Elysia({ prefix: '/api' })
             categoryId: t.Number(),
             amount: t.Number(),
             note: t.String(),
-            classification: t.Optional(t.Union([t.String(), t.Null()]))
+            classification: t.Optional(t.Union([t.String(), t.Null()])),
+            createdAt: t.Optional(t.String()) // ISO date string
         })
     });
