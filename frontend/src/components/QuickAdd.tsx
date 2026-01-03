@@ -330,7 +330,7 @@ export function QuickAdd({
                 </div>
 
                 <div className={clsx(
-                    type === 'expense'
+                    (type === 'expense' || type === 'income')
                         ? "grid grid-cols-5 gap-8 justify-items-center"
                         : "flex flex-wrap gap-8 justify-center"
                 )}>

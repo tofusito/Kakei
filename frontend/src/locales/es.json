@@ -47,7 +47,9 @@
     },
     "quick_add": {
         "add": "Añadir",
+        "edit": "Editar",
         "confirm": "Confirmar",
+        "save": "Guardar",
         "note": "Nota"
     },
     "types": {
@@ -57,7 +59,9 @@
     },
     "categories": {
         "Salary": "Salario",
-        "Gifts Received": "Regalos Recibidos",
+        "Money Received": "Dinero Recibido",
+        "Sales": "Ventas",
+        "Investment Returns": "Beneficios por Inversiones",
         "Refunds": "Reembolsos",
         "Index Funds": "Fondos Indexados",
         "ETFs": "ETFs",

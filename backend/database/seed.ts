@@ -8,7 +8,9 @@ const db = drizzle(client);
 const DEFAULT_CATEGORIES = [
     // Income
     { name: 'Salary', icon: 'Wallet', type: 'income' },
-    { name: 'Gifts Received', icon: 'Gift', type: 'income' },
+    { name: 'Money Received', icon: 'HandCoins', type: 'income' },
+    { name: 'Sales', icon: 'Store', type: 'income' },
+    { name: 'Investment Returns', icon: 'TrendingUp', type: 'income' },
     { name: 'Refunds', icon: 'Repeat', type: 'income' },
 
     // Investment

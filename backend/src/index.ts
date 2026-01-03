@@ -41,19 +41,16 @@ const app = new Elysia()
     .use(dashboardRoutes)
     .use(transactionRoutes)
     .use(settingsRoutes)
-    // 2. Static Files
+    // 2. Static Files - Icons and Assets
+    .get('/apple-touch-icon.png', () => Bun.file('public/apple-touch-icon.png'))
+    .get('/favicon.png', () => Bun.file('public/favicon.png'))
+    .get('/favicon.ico', () => Bun.file('public/favicon.ico'))
+    .get('/icon-192.png', () => Bun.file('public/icon-192.png'))
+    .get('/icon-512.png', () => Bun.file('public/icon-512.png'))
+    .get('/manifest.json', () => Bun.file('public/manifest.json'))
     .get('/assets/*', async ({ params }) => {
         const filePath = `public/assets/${params['*']}`;
         return Bun.file(filePath);
-    })
-    .get('/*.png', async ({ path }) => {
-        return Bun.file(`public${path}`);
-    })
-    .get('/*.ico', async ({ path }) => {
-        return Bun.file(`public${path}`);
-    })
-    .get('/*.json', async ({ path }) => {
-        return Bun.file(`public${path}`);
     })
     // 3. SPA Routes - serve index.html for all other routes
     .get('*', async ({ path, set }) => {

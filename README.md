@@ -45,6 +45,12 @@
 - **Expense Ring**: Interactive donut chart showing spending distribution.
 - **Detailed History**: Paginated transaction list with advanced filtering by **Time** (Week, Month, Year) and **Type**.
 
+### 📱 **Progressive Web App (PWA)**
+- **Install on Mobile**: Add to home screen on iOS/Android for a native-like experience.
+- **Custom Icon**: Beautiful 家計 logo appears on your device's home screen.
+- **Offline-Ready**: Works seamlessly without an internet connection.
+- **No App Store Required**: Instant access directly from your browser.
+
 ### 🔒 **Privacy-First Architecture**
 - **Self-Hosted**: Your data lives on your machine.
 - **No Tracking**: Zero analytics, zero telemetry.
@@ -112,6 +118,25 @@ To remove all data (including the database):
 ```bash
 docker-compose down -v
 ```
+
+### 📱 Installing as a Web App (PWA)
+
+#### iOS (Safari)
+1. Open `http://localhost:3000` (or your server's IP) in Safari
+2. Tap the **Share** button (square with arrow)
+3. Scroll down and select **"Add to Home Screen"**
+4. Confirm and enjoy the native-like experience with the 家計 icon!
+
+#### Android (Chrome)
+1. Open `http://localhost:3000` in Chrome
+2. Tap the **menu** (three dots)
+3. Select **"Add to Home screen"**
+4. Confirm and launch from your home screen
+
+#### Desktop (Chrome/Edge)
+1. Open `http://localhost:3000`
+2. Click the **install icon** (➕) in the address bar
+3. Click **"Install"** and it will open as a standalone app
 
 ---
 

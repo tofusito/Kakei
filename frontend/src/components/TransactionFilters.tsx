@@ -77,7 +77,7 @@ export function TransactionFilters({
 
                     {showFilterMenu && (
                         <div className={clsx(
-                            "absolute right-0 top-full mt-2 w-48 rounded-lg shadow-xl border overflow-hidden py-1 z-50",
+                            "absolute right-0 bottom-full mb-2 w-48 rounded-lg shadow-xl border overflow-hidden py-1 z-50",
                             isDarkMode
                                 ? "bg-zinc-900 border-zinc-800"
                                 : "bg-white border-zinc-200"
@@ -128,7 +128,7 @@ export function TransactionFilters({
 
                     {showClassificationMenu && (
                         <div className={clsx(
-                            "absolute right-0 top-full mt-2 w-48 rounded-lg shadow-xl border overflow-hidden py-1 z-50",
+                            "absolute right-0 bottom-full mb-2 w-48 rounded-lg shadow-xl border overflow-hidden py-1 z-50",
                             isDarkMode
                                 ? "bg-zinc-900 border-zinc-800"
                                 : "bg-white border-zinc-200"
