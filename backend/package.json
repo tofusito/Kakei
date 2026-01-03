@@ -13,7 +13,8 @@
     "drizzle-orm": "latest",
     "postgres": "latest",
     "@elysiajs/jwt": "latest",
-    "@elysiajs/cors": "latest"
+    "@elysiajs/cors": "latest",
+    "@elysiajs/static": "latest"
   },
   "devDependencies": {
     "bun-types": "latest",

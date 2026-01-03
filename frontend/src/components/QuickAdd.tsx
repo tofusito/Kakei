@@ -1,33 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Check, ArrowLeft, Wallet, Gift, Repeat, TrendingUp, BarChart3, Landmark, Home, ShoppingCart, Train, Cloud, Activity, Pill, PartyPopper, Package, Heart, Settings, Zap, Star, Trash2, Sparkles } from 'lucide-react';
+import { X, Check, ArrowLeft, Zap, Star, Trash2, Sparkles } from 'lucide-react';
 import clsx from 'clsx';
-
-interface Category {
-    id: number;
-    name: string;
-    icon: string;
-    type: 'income' | 'expense' | 'investment';
-}
+import { DynamicIcon } from './shared/DynamicIcon';
+import type { Category, TransactionType, Classification } from '../types';
 
 interface QuickAddProps {
-    type: 'expense' | 'income' | 'investment';
+    type: TransactionType;
     categories: Category[];
-    onAddTransaction: (categoryId: number, amount: number, note: string, classification: string | null) => Promise<void>;
+    onAddTransaction: (categoryId: number, amount: number, note: string, classification: Classification | null) => Promise<void>;
     onClose: () => void;
     isDropdown?: boolean;
     onSelectCategory?: (cat: Category) => void;
     selectedCategory?: Category | null;
 }
 
-const IconMap: { [key: string]: any } = {
-    Wallet, Gift, Repeat, TrendingUp, BarChart3, Landmark,
-    Home, ShoppingCart, Train, Cloud, Activity, Pill, PartyPopper, Package, Heart, Settings
-};
-
-function DynamicIcon({ name, size = 18, className = "" }: { name: string, size?: number, className?: string }) {
-    const Icon = IconMap[name] || Settings;
-    return <Icon size={size} className={className} />;
-}
 
 export function QuickAdd({
     type,
@@ -41,26 +27,25 @@ export function QuickAdd({
     const [internalSelectedCategory, setInternalSelectedCategory] = useState<Category | null>(null);
     const [amount, setAmount] = useState('');
     const [note, setNote] = useState('');
-    const [classification, setClassification] = useState<string | null>(null);
+    const [classification, setClassification] = useState<Classification | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
     const selectedCategory = externalSelectedCategory || internalSelectedCategory;
-    const isVital = selectedCategory && ['Housing', 'Groceries', 'Transport'].includes(selectedCategory.name);
 
     useEffect(() => {
         if (selectedCategory && inputRef.current) {
             inputRef.current.focus();
         }
-        if (isVital) setClassification('survival');
-        else setClassification(null);
-    }, [selectedCategory, isVital]);
+        // Always reset classification to null when category changes
+        setClassification(null);
+    }, [selectedCategory]);
 
     const handleCategoryClick = (category: Category) => {
         if (onSelectCategory) onSelectCategory(category);
         else setInternalSelectedCategory(category);
     };
 
-    const handleSubmit = async (finalClassification: string | null) => {
+    const handleSubmit = async (finalClassification: Classification | null) => {
         if (!selectedCategory || !amount || !note.trim()) return;
         const numAmount = parseFloat(amount);
         if (isNaN(numAmount)) return;
@@ -164,7 +149,7 @@ export function QuickAdd({
                                     ].map((opt) => (
                                         <button
                                             key={opt.id}
-                                            onClick={() => setClassification(opt.id)}
+                                            onClick={() => setClassification(opt.id as Classification)}
                                             className={clsx(
                                                 "flex flex-col items-center justify-center py-3 rounded-sm border transition-all",
                                                 classification === opt.id
@@ -199,5 +184,42 @@ export function QuickAdd({
         );
     }
 
-    return null;
+    // DEFAULT MODAL (Category Selection)
+    return (
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center pointer-events-none">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm pointer-events-auto transition-opacity" onClick={onClose} />
+            <div className={clsx(
+                "relative w-full max-w-md bg-white dark:bg-[#09090b]",
+                "rounded-t-2xl sm:rounded-2xl p-6 shadow-2xl",
+                "transform transition-all pointer-events-auto",
+                "animate-in slide-in-from-bottom-4 duration-300 border border-zinc-200 dark:border-zinc-800"
+            )}>
+                <div className="flex justify-between items-center mb-6">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">
+                        Add {type}
+                    </span>
+                    <button onClick={onClose} className="p-2 -mr-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200">
+                        <X size={16} />
+                    </button>
+                </div>
+
+                <div className="flex flex-wrap justify-center gap-6">
+                    {categories.map((cat) => (
+                        <button
+                            key={cat.id}
+                            onClick={() => handleCategoryClick(cat)}
+                            className="flex flex-col items-center gap-3 group"
+                        >
+                            <div className="w-14 h-14 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 flex items-center justify-center transition-all group-hover:scale-95 group-active:scale-90 group-hover:border-zinc-300 dark:group-hover:border-zinc-700">
+                                <DynamicIcon name={cat.icon} size={22} className="text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-900 dark:group-hover:text-zinc-200" />
+                            </div>
+                            <span className="text-[8px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest text-center group-hover:text-zinc-900 dark:group-hover:text-zinc-200 max-w-[60px] leading-tight">
+                                {cat.name}
+                            </span>
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
 }
