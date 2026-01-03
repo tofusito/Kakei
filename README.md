@@ -1,95 +1,61 @@
+<div align="center">
+
 # KAKEI (家計)
 
 > **Philosophy**: Stoic. Minimalist. Frictionless.  
 > *"Wealth consists not in having great possessions, but in having few wants."* — Epictetus
 
-**Kakei** is a personal finance tracker designed for the disciplined mind. It features a brutalist, OLED-optimized interface with True Black (`#000000`) and Dark Mode themes, and a friction-free entry system for tracking Income, Expenses, and Investments.
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Bun](https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white)](https://bun.sh)
+[![ElysiaJS](https://img.shields.io/badge/ElysiaJS-EB5757?style=for-the-badge&logo=elysia&logoColor=white)](https://elysiajs.com)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0)
+
+<a href="https://www.buymeacoffee.com/tofusito" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
+</div>
 
 ---
+
+**Kakei** is a personal finance tracker designed for the disciplined mind. It features a brutalist, OLED-optimized interface with **True Black** (`#000000`) and **Light Mode** themes, ensuring a friction-free experience for tracking Income, Expenses, and Investments.
 
 ## ✨ Features
 
-### 🎨 **Elegant UI**
-- **Dual Theme Support**: True Black (OLED-optimized) and Light Mode
-- **Minimalist Design**: Clean, distraction-free interface
-- **Responsive**: Optimized for mobile and desktop
-- **Smooth Animations**: Delightful micro-interactions
+### 🎨 **Elegant & Adaptive UI**
+- **Dual Theme Support**: Toggle between **True Black** (OLED-optimized) and **Light Mode**. Theme preference is persisted automatically.
+- **Internationalization (i18n)**: Fully localized in **English** 🇺🇸 and **Spanish** 🇪🇸.
+- **Responsive Design**: Flawless experience on both mobile and desktop.
+- **Smooth Animations**: Glassmorphism effects and delightful micro-interactions.
 
-### 💸 **Quick Transaction Entry**
-- **One-Click Access**: Large, accessible buttons for Expense, Income, and Investment
-- **Category Selection**: Visual grid of 10 expense categories, 3 income sources, and investment options
-- **Smart Classification**: Categorize expenses as:
-  - 🟢 **Vital**: Essential needs (survival)
-  - 🔵 **Useful**: Quality of life improvements
-  - 🟡 **Treat**: Pleasures and luxuries
-  - 🔴 **Waste**: Regrettable purchases
+### 💸 **Transaction Management**
+- **Frictionless Entry**: Large, accessible buttons for **Expense**, **Income**, and **Investment**.
+- **Smart Categorization**: Visual grid with translated categories (e.g., Housing/Vivienda, Salary/Salario).
+- **Edit & Delete**: Full control over your history - modify details or remove entries effortlessly.
+- **Classification**: Categorize expenses by necessity:
+  - 🟢 **Vital**: Survival needs
+  - 🔵 **Useful**: Quality of life
+  - 🟡 **Treat**: Pleasures
+  - 🔴 **Waste**: Regrettable spending
 
 ### 📊 **Visual Dashboard**
-- **Balance Overview**: Real-time balance with income, expenses, and investments
-- **Expense Ring**: Interactive donut chart showing expense distribution by classification
-- **Trend Chart**: Visual representation of daily spending patterns
-- **Smart Breakdown**: Click the expense ring to see detailed classification breakdown
+- **Real-time Balance**: Instant overview of your financial health.
+- **Expense Ring**: Interactive donut chart showing spending distribution.
+- **Detailed History**: Paginated transaction list with advanced filtering by **Time** (Week, Month, Year) and **Type**.
 
-### 🔍 **Advanced Filtering**
-- **All Time**: View complete transaction history
-- **This Week**: Current week's transactions
-- **This Month**: Current month's transactions
-- **This Year**: Current year's transactions
-- **Custom Range**: Specific date range selection
-
-### 🔒 **Privacy-First**
-- **Self-Hosted**: Your data stays with you
-- **No Tracking**: No analytics, no telemetry
-- **Docker-Based**: Easy deployment and data persistence
+### 🔒 **Privacy-First Architecture**
+- **Self-Hosted**: Your data lives on your machine.
+- **No Tracking**: Zero analytics, zero telemetry.
+- **Dockerized**: Single-container deployment with persistent storage.
 
 ---
 
-## 🏗️ Architecture
+## 📸 Gallery
 
-Kakei is distributed as a single, self-contained **Production Pack**:
-
-```
-┌─────────────────────────────────────┐
-│         Docker Container            │
-│  ┌───────────────────────────────┐  │
-│  │   ElysiaJS Backend (Bun)      │  │
-│  │   - API Routes                │  │
-│  │   - Static File Serving       │  │
-│  │   - Built React Frontend      │  │
-│  └───────────────────────────────┘  │
-│                ↓                     │
-│  ┌───────────────────────────────┐  │
-│  │   PostgreSQL Database         │  │
-│  │   - Drizzle ORM               │  │
-│  │   - Persistent Volume         │  │
-│  └───────────────────────────────┘  │
-└─────────────────────────────────────┘
-         Port 3000 (HTTP)
-```
-
-All traffic is handled on a single port (**3000**).
-
----
-
-## 🛠️ Tech Stack
-
-### Runtime & Framework
-- **[Bun](https://bun.sh)**: All-in-one JavaScript runtime and toolkit
-- **[ElysiaJS](https://elysiajs.com)**: High-performance backend framework
-
-### Frontend
-- **React 18**: UI library
-- **Vite**: Build tool and dev server
-- **TailwindCSS**: Utility-first CSS framework
-- **Lucide Icons**: Beautiful, consistent icons
-- **Recharts**: Composable charting library
-- **Axios**: HTTP client
-- **clsx**: Conditional className utility
-
-### Backend & Database
-- **PostgreSQL 15**: Relational database
-- **Drizzle ORM**: Type-safe database toolkit
-- **JWT**: Authentication tokens
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/placeholder-light.png" alt="Light Mode" width="45%">
+  <img src="https://github.com/user-attachments/assets/placeholder-dark.png" alt="Dark Mode" width="45%">
+</div>
 
 ---
 
@@ -132,155 +98,29 @@ docker-compose down -v
 
 ---
 
-## 📱 Usage Guide
+## 🛠️ Tech Stack
 
-### 1. Dashboard Overview
+### Runtime & Framework
+- **[Bun](https://bun.sh)**: Ultra-fast JavaScript runtime.
+- **[ElysiaJS](https://elysiajs.com)**: High-performance backend framework.
 
-The dashboard displays:
-- **Balance Card**: Current balance with income, expenses, and investments
-- **Expense Ring**: Interactive visualization of expense classifications (click to expand)
-- **Quick Actions**: Three large buttons for adding transactions
-- **Transaction List**: Recent transactions with filtering options
+### Frontend
+- **React 18**: Component-based UI.
+- **Vite**: Next-generation frontend tooling.
+- **TailwindCSS**: Utility-first styling.
+- **Lucide Icons**: Crisp, consistent iconography.
+- **i18next**: Robust internationalization framework.
 
-### 2. Adding Transactions
-
-#### Adding an Expense
-1. Click the **EXPENSE** button (red with down arrow)
-2. Select a category from the grid:
-   - Housing, Groceries, Transport, Subscriptions, Services
-   - Health, Leisure, Shopping, Gifts Given, Other
-3. Enter the amount (e.g., `50.00`)
-4. Add a note (e.g., "Weekly groceries")
-5. **Classify the expense**:
-   - 🟢 **Vital**: For essentials (rent, food, utilities)
-   - 🔵 **Useful**: For quality improvements (gym, courses)
-   - 🟡 **Treat**: For pleasures (dining out, entertainment)
-   - 🔴 **Waste**: For regrettable purchases
-6. Click **CONFIRM**
-
-#### Adding Income
-1. Click the **INCOME** button (green with up arrow)
-2. Select a source:
-   - Salary, Gifts Received, Refunds
-3. Enter the amount and note
-4. Click **CONFIRM**
-
-#### Adding an Investment
-1. Click the **INVEST** button (blue with trending arrow)
-2. Select investment type
-3. Enter the amount and note
-4. Click **CONFIRM**
-
-### 3. Viewing Expense Breakdown
-
-Click the **colored ring** next to "STATUS" in the balance card to open a detailed modal showing:
-- Percentage and amount for each classification
-- Visual progress bars
-- Total breakdown
-
-### 4. Filtering Transactions
-
-Click the **filter icon** (⚡) next to "TRANSACTIONS" to filter by:
-- **All Time**: Complete history
-- **This Week**: Monday to Sunday of current week
-- **This Month**: Current calendar month
-- **This Year**: January to December of current year
-- **Specific Time**: Custom date range (coming soon)
-
-### 5. Theme Switching
-
-Click the **settings icon** (⚙️) in the top-right corner to toggle between:
-- 🌙 **Dark Mode**: True black OLED-optimized theme
-- ☀️ **Light Mode**: Clean, bright theme
-
-Your theme preference is saved automatically.
-
----
-
-## 🔧 Development
-
-### Local Development (without Docker)
-
-#### Backend Setup
-```bash
-cd backend
-bun install
-bun run dev
-```
-Backend runs on `http://localhost:3000`
-
-#### Frontend Setup
-```bash
-cd frontend
-bun install
-bun run dev
-```
-Frontend runs on `http://localhost:5173` (with proxy to backend)
-
-### Database Management
-
-#### Generate Migration
-```bash
-cd backend
-bun run generate
-```
-
-#### Apply Migrations Manually
-```bash
-cd backend
-bun run migrate
-```
-
-> Migrations run automatically on container startup in production.
-
-### Project Structure
-
-```
-kakei/
-├── backend/
-│   ├── src/
-│   │   ├── index.ts           # Main server file
-│   │   ├── db.ts              # Database connection
-│   │   └── routes/            # API routes
-│   │       ├── dashboard.ts   # Dashboard endpoints
-│   │       ├── transactions.ts # Transaction CRUD
-│   │       └── settings.ts    # User settings
-│   ├── database/
-│   │   ├── schema.ts          # Drizzle schema
-│   │   ├── migrate.ts         # Migration runner
-│   │   ├── seed.ts            # Seed data
-│   │   └── drizzle/           # Generated migrations
-│   └── package.json
-├── frontend/
-│   ├── src/
-│   │   ├── App.tsx            # Main component
-│   │   ├── components/        # React components
-│   │   ├── hooks/             # Custom hooks
-│   │   ├── lib/               # Utilities
-│   │   └── types/             # TypeScript types
-│   └── package.json
-├── docker-compose.yaml
-├── Dockerfile
-└── README.md
-```
-
----
-
-## 🎯 Roadmap
-
-- [ ] **Budget Goals**: Set monthly budgets per category
-- [ ] **Recurring Transactions**: Auto-add subscriptions and salaries
-- [ ] **Export Data**: CSV/JSON export functionality
-- [ ] **Multi-Currency**: Support for multiple currencies
-- [ ] **Reports**: Monthly/yearly financial reports
-- [ ] **Mobile App**: Native mobile application
-- [ ] **Backup/Restore**: Easy data backup and restoration
+### Backend & Database
+- **PostgreSQL 15**: Reliable relational database.
+- **Drizzle ORM**: TypeScript-first ORM for type safety.
+- **Docker**: Containerization for consistent deployment.
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome!
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
@@ -292,33 +132,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-Kakei is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.
-
-This means:
-- ✅ You can use, modify, and distribute this software
-- ✅ You can use it for commercial purposes
-- ⚠️ You must disclose the source code of any modifications
-- ⚠️ If you run a modified version as a service, you must make the source available
-
-See the [LICENSE](LICENSE) file for full details.
-
----
-
-## 🙏 Acknowledgments
-
-- **Epictetus** for the philosophical foundation
-- **Bun Team** for the amazing runtime
-- **ElysiaJS Team** for the elegant framework
-- **Tailwind Labs** for the utility-first CSS framework
-
----
-
-## 📞 Support
-
-If you encounter any issues or have questions:
-- Open an issue on GitHub
-- Check existing issues for solutions
-- Review the documentation above
+Distributed under the **AGPL-3.0** License. See `LICENSE` for more information.
 
 ---
 
