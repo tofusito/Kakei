@@ -4,7 +4,7 @@ import { jwt } from '@elysiajs/jwt';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { users, categories, transactions } from '../database/schema';
-import { eq, desc, sum, and, gte, sql } from 'drizzle-orm';
+import { eq, desc, sum, and, gte, lte, sql } from 'drizzle-orm';
 import { runMigrations } from '../database/migrate';
 import { runSeed } from '../database/seed';
 
@@ -124,7 +124,52 @@ const app = new Elysia()
     .get('/api/categories', async () => {
         return await db.select().from(categories);
     })
-    .get('/api/history', async () => {
+    .get('/api/history', async ({ query }) => {
+        const { filterType, month, year, week, startDate, endDate } = query;
+
+        // Build date filter conditions
+        let dateCondition;
+
+        if (filterType === 'month' && month && year) {
+            const start = new Date(Number(year), Number(month) - 1, 1);
+            const end = new Date(Number(year), Number(month), 0, 23, 59, 59);
+            dateCondition = and(
+                gte(transactions.createdAt, start),
+                lte(transactions.createdAt, end)
+            );
+        } else if (filterType === 'year' && year) {
+            const start = new Date(Number(year), 0, 1);
+            const end = new Date(Number(year), 11, 31, 23, 59, 59);
+            dateCondition = and(
+                gte(transactions.createdAt, start),
+                lte(transactions.createdAt, end)
+            );
+        } else if (filterType === 'week' && week && year) {
+            // Calculate week start/end
+            const weekNum = Number(week);
+            const yearNum = Number(year);
+            const start = new Date(yearNum, 0, 1 + (weekNum - 1) * 7);
+            const dayOfWeek = start.getDay();
+            start.setDate(start.getDate() - dayOfWeek + 1); // Monday
+            const end = new Date(start);
+            end.setDate(start.getDate() + 6);
+            end.setHours(23, 59, 59);
+            dateCondition = and(
+                gte(transactions.createdAt, start),
+                lte(transactions.createdAt, end)
+            );
+        } else if (filterType === 'range' && startDate && endDate) {
+            const start = new Date(startDate as string);
+            const end = new Date(endDate as string);
+            end.setHours(23, 59, 59);
+            dateCondition = and(
+                gte(transactions.createdAt, start),
+                lte(transactions.createdAt, end)
+            );
+        }
+
+        const whereClause = dateCondition || undefined;
+
         return await db.select({
             id: transactions.id,
             amount: transactions.amount,
@@ -137,8 +182,9 @@ const app = new Elysia()
         })
             .from(transactions)
             .leftJoin(categories, eq(transactions.categoryId, categories.id))
+            .where(whereClause)
             .orderBy(desc(transactions.createdAt))
-            .limit(20);
+            .limit(100);
     })
     .post('/api/transactions', async ({ body }) => {
         const { categoryId, amount, note, classification, userId } = body;

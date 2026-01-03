@@ -5,6 +5,15 @@
 
 **Kakei** is a personal finance tracker designed for the disciplined mind. It features a brutalist, OLED-optimized True Black interface (`#000000`) and a friction-free entry system for tracking Income, Expenses, and Investments.
 
+## Features
+
+-   ✨ **Minimalist UI**: True black (`#000000`) design optimized for OLED displays
+-   💸 **Quick Transaction Entry**: Add expenses, income, and investments in seconds
+-   📊 **Smart Filtering**: Filter transactions by week, month, year, or custom date range
+-   🏷️ **Expense Classification**: Categorize expenses as Vital, Useful, Treat, or Waste
+-   📈 **Visual Dashboard**: Track your balance with charts and summaries
+-   🔒 **Privacy-First**: Self-hosted, your data stays with you
+
 ## Architecture
 
 Kakei is distributed as a single, self-contained **Production Pack**:
@@ -34,14 +43,59 @@ All traffic is handled on a single port (**3000**).
     docker-compose up -d --build
     ```
 
-3.  Initialize the Database (Run from the app container):
-    ```bash
-    # Run Migrations & Seed Data
-    docker-compose exec app bun run database/migrate.ts
-    docker-compose exec app bun run database/seed.ts
-    ```
+3.  Open **http://localhost:3000**
 
-4.  Open **http://localhost:3000**
+> **Note**: Database migrations and seeding run automatically on startup. Your data persists in a Docker volume.
+
+## Usage
+
+### Adding Transactions
+
+1. Click on **Expense**, **Income**, or **Invest** buttons
+2. Select a category from the dropdown
+3. Enter the amount and a note
+4. For expenses, classify them:
+   - **Vital**: Essential needs (housing, groceries, transport)
+   - **Useful**: Quality of life improvements
+   - **Treat**: Pleasures and luxuries
+   - **Waste**: Regrettable purchases
+5. Confirm to save
+
+### Filtering Transactions
+
+Click the filter icon (⚡) next to "Transactions" to view:
+-   **All Time**: Show all transactions
+-   **This Week**: Current week's transactions
+-   **This Month**: Current month's transactions
+-   **This Year**: Current year's transactions
+-   **Specific Time**: Custom date range
+
+## Development
+
+### Local Development (without Docker)
+
+**Backend:**
+```bash
+cd backend
+bun install
+bun run dev
+```
+
+**Frontend:**
+```bash
+cd frontend
+bun install
+bun run dev
+```
+
+### Database Schema Changes
+
+```bash
+cd backend
+bun run generate  # Generate migration files
+```
+
+Migrations run automatically on container startup.
 
 ## License
 
