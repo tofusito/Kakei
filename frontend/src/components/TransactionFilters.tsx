@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 import { Filter, X, Clock } from 'lucide-react';
 import type { FilterType, Classification } from '../types';
 
@@ -28,13 +29,30 @@ export function TransactionFilters({
     onClassificationChange,
     isDarkMode
 }: TransactionFiltersProps) {
+    const { t } = useTranslation();
+
+    const timeFilters = [
+        { id: 'all', label: t('filters.all_time') },
+        { id: 'week', label: t('filters.this_week') },
+        { id: 'month', label: t('filters.this_month') },
+        { id: 'year', label: t('filters.this_year') }
+    ];
+
+    const typeFilters = [
+        { id: 'all', label: t('filters.all_types') },
+        { id: 'survival', label: t('breakdown.survival'), color: 'text-emerald-500' },
+        { id: 'quality', label: t('breakdown.quality'), color: 'text-blue-500' },
+        { id: 'pleasure', label: t('breakdown.pleasure'), color: 'text-amber-500' },
+        { id: 'waste', label: t('breakdown.waste'), color: 'text-rose-500' }
+    ];
+
     return (
         <div className="flex items-center justify-between mb-6 relative z-20">
             <span className={clsx(
                 "text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2",
                 isDarkMode ? "text-zinc-500" : "text-zinc-400"
             )}>
-                <History size={14} /> Transactions
+                <History size={14} /> {t('filters.transactions')}
             </span>
             <div className="flex items-center gap-2">
                 {/* Time Filter */}
@@ -65,14 +83,9 @@ export function TransactionFilters({
                                 : "bg-white border-zinc-200"
                         )}>
                             <div className={clsx("px-4 py-2 text-[10px] font-bold uppercase tracking-wider border-b", isDarkMode ? "border-zinc-800 text-zinc-500" : "border-zinc-100 text-zinc-400")}>
-                                Time Period
+                                {t('filters.filter_by')}
                             </div>
-                            {[
-                                { id: 'all', label: 'All Time' },
-                                { id: 'week', label: 'This Week' },
-                                { id: 'month', label: 'This Month' },
-                                { id: 'year', label: 'This Year' }
-                            ].map((opt) => (
+                            {timeFilters.map((opt) => (
                                 <button
                                     key={opt.id}
                                     onClick={() => {
@@ -121,15 +134,9 @@ export function TransactionFilters({
                                 : "bg-white border-zinc-200"
                         )}>
                             <div className={clsx("px-4 py-2 text-[10px] font-bold uppercase tracking-wider border-b", isDarkMode ? "border-zinc-800 text-zinc-500" : "border-zinc-100 text-zinc-400")}>
-                                Expense Type
+                                {t('filters.expense_type')}
                             </div>
-                            {[
-                                { id: 'all', label: 'All Types' },
-                                { id: 'survival', label: 'Vital', color: 'text-emerald-500' },
-                                { id: 'quality', label: 'Useful', color: 'text-blue-500' },
-                                { id: 'pleasure', label: 'Treat', color: 'text-amber-500' },
-                                { id: 'waste', label: 'Waste', color: 'text-rose-500' }
-                            ].map((opt) => (
+                            {typeFilters.map((opt) => (
                                 <button
                                     key={opt.id}
                                     onClick={() => {

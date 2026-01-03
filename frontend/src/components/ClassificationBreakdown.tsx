@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 import { X } from 'lucide-react';
 import type { ClassificationBreakdown } from '../types';
 
@@ -10,11 +11,13 @@ interface ClassificationBreakdownProps {
 }
 
 export function ClassificationBreakdown({ data, isDarkMode, onClose, isModal = false }: ClassificationBreakdownProps) {
+    const { t } = useTranslation();
+
     const items = [
-        { id: 'survival', label: 'Vital', value: data.survival, color: isDarkMode ? 'bg-emerald-500' : 'bg-emerald-600' },
-        { id: 'quality', label: 'Useful', value: data.quality, color: isDarkMode ? 'bg-blue-500' : 'bg-blue-600' },
-        { id: 'pleasure', label: 'Treat', value: data.pleasure, color: isDarkMode ? 'bg-amber-500' : 'bg-amber-600' },
-        { id: 'waste', label: 'Waste', value: data.waste, color: isDarkMode ? 'bg-rose-500' : 'bg-rose-600' }
+        { id: 'survival', label: t('breakdown.survival'), value: data.survival, color: isDarkMode ? 'bg-emerald-500' : 'bg-emerald-600' },
+        { id: 'quality', label: t('breakdown.quality'), value: data.quality, color: isDarkMode ? 'bg-blue-500' : 'bg-blue-600' },
+        { id: 'pleasure', label: t('breakdown.pleasure'), value: data.pleasure, color: isDarkMode ? 'bg-amber-500' : 'bg-amber-600' },
+        { id: 'waste', label: t('breakdown.waste'), value: data.waste, color: isDarkMode ? 'bg-rose-500' : 'bg-rose-600' }
     ];
 
     const total = data.survival + data.quality + data.pleasure + data.waste;
@@ -34,15 +37,15 @@ export function ClassificationBreakdown({ data, isDarkMode, onClose, isModal = f
                         isModal ? "text-[10px]" : "text-[9px]",
                         isDarkMode ? "text-zinc-500" : "text-zinc-500"
                     )}>
-                        Expense Breakdown
+                        {t('breakdown.header')}
                     </span>
                     {isModal && onClose && (
-                        <button 
+                        <button
                             onClick={onClose}
                             className={clsx(
                                 "p-2 -mr-2 transition-colors",
-                                isDarkMode 
-                                    ? "text-zinc-400 hover:text-zinc-200" 
+                                isDarkMode
+                                    ? "text-zinc-400 hover:text-zinc-200"
                                     : "text-zinc-400 hover:text-zinc-600"
                             )}
                         >

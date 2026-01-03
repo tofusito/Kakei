@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X, Check, ArrowLeft, Zap, Star, Trash2, Sparkles, Clock } from 'lucide-react';
 import clsx from 'clsx';
 import { DynamicIcon } from './shared/DynamicIcon';
@@ -26,6 +27,7 @@ export function QuickAdd({
     selectedCategory: externalSelectedCategory,
     isDarkMode
 }: QuickAddProps) {
+    const { t } = useTranslation();
     const [internalSelectedCategory, setInternalSelectedCategory] = useState<Category | null>(null);
     const [amount, setAmount] = useState('');
     const [note, setNote] = useState('');
@@ -63,7 +65,7 @@ export function QuickAdd({
         setInternalSelectedCategory(null);
         setSelectedDate(new Date().toISOString().split('T')[0]);
         setShowDatePicker(false);
-        
+
         // Close modal after adding transaction
         onClose();
     };
@@ -89,7 +91,7 @@ export function QuickAdd({
                             <span className="text-zinc-600 group-hover:text-zinc-300">
                                 <DynamicIcon name={cat.icon} size={14} />
                             </span>
-                            <span className="text-[10px] font-black text-zinc-500 group-hover:text-zinc-300 uppercase tracking-widest">{cat.name}</span>
+                            <span className="text-[10px] font-black text-zinc-500 group-hover:text-zinc-300 uppercase tracking-widest">{t(`categories.${cat.name}`)}</span>
                         </button>
                     ))}
                 </div>
@@ -122,7 +124,7 @@ export function QuickAdd({
                         <div className="text-zinc-400 mb-3">
                             <DynamicIcon name={selectedCategory.icon} size={32} />
                         </div>
-                        <h3 className="text-[10px] font-black text-zinc-500 tracking-[0.3em] uppercase">{selectedCategory.name}</h3>
+                        <h3 className="text-[10px] font-black text-zinc-500 tracking-[0.3em] uppercase">{t(`categories.${selectedCategory.name}`)}</h3>
                     </div>
 
                     <div className="space-y-8">
@@ -144,7 +146,7 @@ export function QuickAdd({
                             type="text"
                             value={note}
                             onChange={(e) => setNote(e.target.value)}
-                            placeholder="Note"
+                            placeholder={t('quick_add.note')}
                             className="w-full bg-transparent border-b border-zinc-900 text-center text-xs font-medium text-zinc-500 py-2 focus:border-zinc-500 focus:ring-0 focus:outline-none transition-colors placeholder:text-zinc-900"
                         />
 
@@ -152,10 +154,10 @@ export function QuickAdd({
                             {isExpense && (
                                 <div className="grid grid-cols-4 gap-1">
                                     {[
-                                        { id: 'survival', label: 'Vital', Icon: Zap, color: 'emerald' },
-                                        { id: 'quality', label: 'Useful', Icon: Star, color: 'blue' },
-                                        { id: 'pleasure', label: 'Treat', Icon: Sparkles, color: 'amber' },
-                                        { id: 'waste', label: 'Waste', Icon: Trash2, color: 'rose' }
+                                        { id: 'survival', label: t('breakdown.survival'), Icon: Zap, color: 'emerald' },
+                                        { id: 'quality', label: t('breakdown.quality'), Icon: Star, color: 'blue' },
+                                        { id: 'pleasure', label: t('breakdown.pleasure'), Icon: Sparkles, color: 'amber' },
+                                        { id: 'waste', label: t('breakdown.waste'), Icon: Trash2, color: 'rose' }
                                     ].map((opt) => (
                                         <button
                                             key={opt.id}
@@ -208,7 +210,7 @@ export function QuickAdd({
                                         )}
                                     >
                                         <Check size={14} strokeWidth={4} />
-                                        Confirm
+                                        {t('quick_add.confirm')}
                                     </button>
                                 )}
                             </div>
@@ -226,7 +228,7 @@ export function QuickAdd({
                                     )}
                                 >
                                     <Check size={14} strokeWidth={4} />
-                                    Confirm
+                                    {t('quick_add.confirm')}
                                 </button>
                             )}
                         </div>
@@ -252,14 +254,14 @@ export function QuickAdd({
                         "text-[10px] font-black uppercase tracking-[0.2em]",
                         isDarkMode ? "text-zinc-500" : "text-zinc-500"
                     )}>
-                        Add {type}
+                        {t('quick_add.add')} {t(`types.${type.toLowerCase()}`)}
                     </span>
-                    <button 
-                        onClick={onClose} 
+                    <button
+                        onClick={onClose}
                         className={clsx(
                             "p-2 -mr-2 transition-colors",
-                            isDarkMode 
-                                ? "text-zinc-400 hover:text-zinc-200" 
+                            isDarkMode
+                                ? "text-zinc-400 hover:text-zinc-200"
                                 : "text-zinc-400 hover:text-zinc-600"
                         )}
                     >
@@ -268,8 +270,8 @@ export function QuickAdd({
                 </div>
 
                 <div className={clsx(
-                    type === 'expense' 
-                        ? "grid grid-cols-5 gap-8 justify-items-center" 
+                    type === 'expense'
+                        ? "grid grid-cols-5 gap-8 justify-items-center"
                         : "flex flex-wrap gap-8 justify-center"
                 )}>
                     {categories.map((cat) => (
@@ -284,9 +286,9 @@ export function QuickAdd({
                                     ? "bg-zinc-900 border-zinc-800 group-hover:border-zinc-700"
                                     : "bg-zinc-50 border-zinc-100 group-hover:border-zinc-300"
                             )}>
-                                <DynamicIcon 
-                                    name={cat.icon} 
-                                    size={22} 
+                                <DynamicIcon
+                                    name={cat.icon}
+                                    size={22}
                                     className={clsx(
                                         isDarkMode
                                             ? "text-zinc-500 group-hover:text-zinc-200"
@@ -300,7 +302,7 @@ export function QuickAdd({
                                     ? "text-zinc-500 group-hover:text-zinc-200"
                                     : "text-zinc-400 group-hover:text-zinc-900"
                             )}>
-                                {cat.name}
+                                {t(`categories.${cat.name}`)}
                             </span>
                         </button>
                     ))}

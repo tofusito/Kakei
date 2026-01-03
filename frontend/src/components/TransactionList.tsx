@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 import { DynamicIcon } from './shared/DynamicIcon';
 import { formatCurrency, formatDate } from '../lib/formatters';
 import type { Transaction } from '../types';
@@ -9,6 +10,8 @@ interface TransactionListProps {
 }
 
 export function TransactionList({ transactions, isDarkMode }: TransactionListProps) {
+    const { t } = useTranslation();
+
     if (transactions.length === 0) {
         return (
             <div className={clsx(
@@ -17,16 +20,16 @@ export function TransactionList({ transactions, isDarkMode }: TransactionListPro
                     ? "border-zinc-800 text-zinc-600"
                     : "border-zinc-200 text-zinc-400"
             )}>
-                <p className="text-xs font-medium">No transactions found</p>
+                <p className="text-xs font-medium">{t('common.no_transactions')}</p>
             </div>
         );
     }
 
     return (
         <div className="space-y-4 pb-20">
-            {transactions.map((t) => (
+            {transactions.map((tr) => (
                 <div
-                    key={t.id}
+                    key={tr.id}
                     className={clsx(
                         "group flex items-center justify-between p-4 rounded-xl border transition-all hover:scale-[1.01] active:scale-[0.99]",
                         isDarkMode
@@ -40,7 +43,7 @@ export function TransactionList({ transactions, isDarkMode }: TransactionListPro
                             isDarkMode ? "bg-zinc-800 group-hover:bg-zinc-700" : "bg-zinc-50 group-hover:bg-zinc-100"
                         )}>
                             <DynamicIcon
-                                name={t.icon}
+                                name={tr.icon}
                                 size={18}
                                 className={isDarkMode ? "text-zinc-400" : "text-zinc-500"}
                             />
@@ -50,16 +53,16 @@ export function TransactionList({ transactions, isDarkMode }: TransactionListPro
                                 "font-bold text-sm mb-0.5",
                                 isDarkMode ? "text-zinc-200" : "text-zinc-900"
                             )}>
-                                {t.category}
+                                {t(`categories.${tr.category}`)}
                             </p>
                             <div className="flex items-center gap-2">
                                 <span className={clsx("text-[10px]", isDarkMode ? "text-zinc-500" : "text-zinc-500")}>
-                                    {formatDate(t.createdAt)}
+                                    {formatDate(tr.createdAt)}
                                 </span>
-                                {t.note && (
+                                {tr.note && (
                                     <>
                                         <span className="text-zinc-600">•</span>
-                                        <span className="text-[10px] text-zinc-500 truncate max-w-[100px]">{t.note}</span>
+                                        <span className="text-[10px] text-zinc-500 truncate max-w-[100px]">{tr.note}</span>
                                     </>
                                 )}
                             </div>
@@ -68,24 +71,22 @@ export function TransactionList({ transactions, isDarkMode }: TransactionListPro
                     <div className="text-right">
                         <span className={clsx(
                             "block font-bold tabular-nums text-sm",
-                            t.type === 'expense'
+                            tr.type === 'expense'
                                 ? (isDarkMode ? "text-zinc-200" : "text-zinc-900")
-                                : t.type === 'income'
+                                : tr.type === 'income'
                                     ? "text-emerald-500"
                                     : "text-blue-500"
                         )}>
-                            {t.type === 'expense' ? '-' : '+'}{formatCurrency(parseFloat(t.amount))}
+                            {tr.type === 'expense' ? '-' : '+'}{formatCurrency(parseFloat(tr.amount))}
                         </span>
-                        {t.classification && (
+                        {tr.classification && (
                             <span className={clsx(
                                 "text-[9px] font-medium uppercase tracking-wider",
-                                t.classification === 'survival' ? "text-emerald-500" :
-                                    t.classification === 'quality' ? "text-blue-500" :
-                                        t.classification === 'pleasure' ? "text-amber-500" : "text-rose-500"
+                                tr.classification === 'survival' ? "text-emerald-500" :
+                                    tr.classification === 'quality' ? "text-blue-500" :
+                                        tr.classification === 'pleasure' ? "text-amber-500" : "text-rose-500"
                             )}>
-                                {t.classification === 'survival' ? 'Vital' :
-                                    t.classification === 'quality' ? 'Useful' :
-                                        t.classification === 'pleasure' ? 'Treat' : 'Waste'}
+                                {t(`breakdown.${tr.classification}`)}
                             </span>
                         )}
                     </div>
