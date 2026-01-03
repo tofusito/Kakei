@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="assets/logo.png" alt="Kakei Logo" width="120">
+
 # KAKEI (家計)
 
 > **Philosophy**: Stoic. Minimalist. Frictionless.  
@@ -50,11 +52,26 @@
 
 ---
 
-## 📸 Gallery
-
+### � Visual Dashboard
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/placeholder-light.png" alt="Light Mode" width="45%">
-  <img src="https://github.com/user-attachments/assets/placeholder-dark.png" alt="Dark Mode" width="45%">
+  <img src="assets/dashboard_light.png" alt="Light Mode" width="45%">
+  <img src="assets/dashboard_dark.png" alt="Dark Mode" width="45%">
+</div>
+
+### � Expense Breakdown
+<div align="center">
+  <img src="assets/classification_breakdown.png" alt="Classification Breakdown" width="60%">
+</div>
+
+### �💸 Frictionless Entry
+<div align="center">
+  <img src="assets/modal_expense_dark.png" alt="Expense Entry" width="45%">
+  <img src="assets/expense_classification.png" alt="Expense Classification" width="45%">
+</div>
+
+### 🔍 Detailed History
+<div align="center">
+  <img src="assets/transaction_history_scrolled.png" alt="Transaction History" width="90%">
 </div>
 
 ---
