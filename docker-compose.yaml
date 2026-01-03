@@ -9,7 +9,10 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_NAME=kakei
-      - JWT_SECRET=supersecret
+      - JWT_SECRET=${JWT_SECRET:-supersecret-change-in-production}
+      - KAKEI_USER=${KAKEI_USER:-admin}
+      - KAKEI_PASSWORD=${KAKEI_PASSWORD:-admin}
+      - NODE_ENV=${NODE_ENV:-production}
     depends_on:
       db:
         condition: service_healthy

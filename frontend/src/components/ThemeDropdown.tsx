@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { Settings, Sun, Moon, Globe } from 'lucide-react';
+import { Settings, Sun, Moon, Globe, LogOut } from 'lucide-react';
+import axios from 'axios';
 import type { Theme } from '../types';
 
 interface ThemeDropdownProps {
@@ -21,6 +22,15 @@ export function ThemeDropdown({
     isDarkMode
 }: ThemeDropdownProps) {
     const { t, i18n } = useTranslation();
+
+    const handleLogout = async () => {
+        try {
+            await axios.post('/logout', {}, { withCredentials: true });
+            window.location.reload(); // Recargar para volver al login
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
 
     return (
         <div className="relative">
@@ -93,6 +103,22 @@ export function ThemeDropdown({
                             {opt.label}
                         </button>
                     ))}
+
+                    {/* Logout Section */}
+                    <div className={clsx("border-t mt-1 pt-1", isDarkMode ? "border-zinc-800" : "border-zinc-100")}>
+                        <button
+                            onClick={handleLogout}
+                            className={clsx(
+                                "w-full text-left px-4 py-3 text-xs font-medium transition-colors flex items-center gap-2",
+                                isDarkMode 
+                                    ? "text-red-400 hover:bg-red-500/10" 
+                                    : "text-red-600 hover:bg-red-50"
+                            )}
+                        >
+                            <LogOut size={14} />
+                            {t('common.logout') || 'Logout'}
+                        </button>
+                    </div>
                 </div>
             )}
         </div>

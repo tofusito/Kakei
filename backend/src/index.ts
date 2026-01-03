@@ -1,7 +1,6 @@
 import { Elysia } from 'elysia';
 import { cors } from '@elysiajs/cors';
-import { jwt } from '@elysiajs/jwt';
-import { staticPlugin } from '@elysiajs/static';
+import { cookie } from '@elysiajs/cookie';
 import { runMigrations } from '../database/migrate';
 import { runSeed } from '../database/seed';
 import { users } from '../database/schema';
@@ -10,10 +9,16 @@ import { db } from './db';
 import { dashboardRoutes } from './routes/dashboard';
 import { transactionRoutes } from './routes/transactions';
 import { settingsRoutes } from './routes/settings';
+import { authRoutes } from './routes/auth';
+import { authMiddleware } from './middleware/auth';
 
 const app = new Elysia()
-    .use(cors())
-    .use(jwt({ name: 'jwt', secret: process.env.JWT_SECRET || 'secret' }))
+    .use(cors({
+        credentials: true, // Permitir cookies en CORS
+        origin: true // En producción, especifica tu dominio de Cloudflare
+    }))
+    .use(cookie())
+    .use(authMiddleware) // Aplicar autenticación a todas las rutas
     .onStart(async () => {
         try {
             console.log('🔄 Running Startup Database Init...');
@@ -37,11 +42,13 @@ const app = new Elysia()
             await db.update(users).set({ passwordHash: hashedPassword }).where(eq(users.username, adminUser));
         }
     })
-    // 1. API Routes
+    // 1. Auth Routes (DEBEN IR PRIMERO)
+    .use(authRoutes)
+    // 2. API Routes (protegidas por middleware)
     .use(dashboardRoutes)
     .use(transactionRoutes)
     .use(settingsRoutes)
-    // 2. Static Files - Icons and Assets
+    // 3. Static Files - Icons and Assets
     .get('/apple-touch-icon.png', () => Bun.file('public/apple-touch-icon.png'))
     .get('/favicon.png', () => Bun.file('public/favicon.png'))
     .get('/favicon.ico', () => Bun.file('public/favicon.ico'))
@@ -52,7 +59,7 @@ const app = new Elysia()
         const filePath = `public/assets/${params['*']}`;
         return Bun.file(filePath);
     })
-    // 3. SPA Routes - serve index.html for all other routes
+    // 4. SPA Routes - serve index.html for all other routes
     .get('*', async ({ path, set }) => {
         if (path.startsWith('/api')) {
             set.status = 404;

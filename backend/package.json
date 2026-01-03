@@ -14,6 +14,7 @@
     "postgres": "latest",
     "@elysiajs/jwt": "latest",
     "@elysiajs/cors": "latest",
+    "@elysiajs/cookie": "latest",
     "@elysiajs/static": "latest"
   },
   "devDependencies": {

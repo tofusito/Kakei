@@ -59,7 +59,13 @@
 - **No App Store Required**: Instant access directly from your browser.
 - **Native-Like Experience**: Fullscreen mode without browser chrome.
 
-### 🔒 **Privacy-First Architecture**
+### 🔒 **Security & Privacy**
+- **JWT Authentication**: Secure login with HTTPOnly cookies and rate limiting (5 attempts/minute).
+- **Protected Routes**: All API endpoints require authentication.
+- **⚠️ Required Configuration**: Must create `.env` file from `.env.example` before deployment.
+- **Configurable Credentials**: Set your own username/password via environment variables.
+- **Session Persistence**: Login lasts 7 days, no need to re-authenticate on page reload.
+- **Production-Ready**: Designed for safe deployment via Cloudflare Tunnel or reverse proxy.
 - **Self-Hosted**: Your data lives on your machine.
 - **No Tracking**: Zero analytics, zero telemetry.
 - **Dockerized**: Single-container deployment with persistent storage.
@@ -98,23 +104,57 @@
 
 ### Installation
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/yourusername/kakei.git
-   cd kakei
-   ```
+#### **Step 1: Clone the Repository**
+```bash
+git clone https://github.com/yourusername/kakei.git
+cd kakei
+```
 
-2. **Start the application**:
-   ```bash
-   docker-compose up -d --build
-   ```
+#### **Step 2: ⚠️ Configure Environment Variables (REQUIRED)**
 
-3. **Open your browser**:
-   ```
-   http://localhost:3000
-   ```
+**You MUST create a `.env` file before starting the application.**
 
-> **Note**: Database migrations and seeding run automatically on startup. Your data persists in a Docker volume (`kakei_data`).
+```bash
+# Copy the example file
+cp .env.example .env
+
+# Generate a secure JWT secret
+openssl rand -base64 32
+
+# Edit .env with your favorite editor
+nano .env  # or vim .env
+```
+
+**Update these values in `.env`:**
+- `KAKEI_USER` - Your login username (change from "admin")
+- `KAKEI_PASSWORD` - A strong password (minimum 12 characters)
+- `JWT_SECRET` - The generated secret from `openssl rand -base64 32`
+
+**Example `.env` file:**
+```env
+KAKEI_USER=myusername
+KAKEI_PASSWORD=MySecureP@ssw0rd2024!
+JWT_SECRET=esTIsZI/V47yJgkIyhHXq8jnJ1d6cEjUzQ4yOlQKUP0=
+NODE_ENV=production
+```
+
+> 📖 **For detailed security guidelines, see [SECURITY.md](./SECURITY.md)**
+
+#### **Step 3: Start the Application**
+```bash
+docker-compose up -d --build
+```
+
+#### **Step 4: Access Kakei**
+```
+http://localhost:3000
+```
+
+Login with the credentials you set in your `.env` file.
+
+> **✅ Session Management**: Your login session persists for **7 days**. You won't need to login again when reloading the page or reopening your browser (unless you explicitly logout or 7 days pass).
+
+> **💾 Data Persistence**: Database migrations and seeding run automatically on startup. All your data persists in a Docker volume (`kakei_data`) and survives container restarts.
 
 ### Stopping the Application
 
@@ -165,6 +205,44 @@ docker-compose down -v
 - **PostgreSQL 15**: Reliable relational database.
 - **Drizzle ORM**: TypeScript-first ORM for type safety.
 - **Docker**: Containerization for consistent deployment.
+
+---
+
+## 🔧 Troubleshooting
+
+### "Login Required on Every Page Reload"
+
+**Problem**: Session doesn't persist, asks for login after refreshing.
+
+**Solution**:
+1. Verify `.env` file exists in project root
+2. Check `NODE_ENV=production` is set in `.env`
+3. Clear browser cookies and cache
+4. Restart containers: `docker-compose down && docker-compose up -d`
+5. Session should now persist for 7 days
+
+### "Cannot Connect to Database"
+
+**Problem**: Backend can't reach PostgreSQL.
+
+**Solution**:
+```bash
+# Check containers are running
+docker-compose ps
+
+# View logs
+docker-compose logs db
+docker-compose logs app
+
+# Restart with fresh build
+docker-compose down && docker-compose up --build -d
+```
+
+### "Invalid Credentials" (Rate Limited)
+
+**Problem**: Too many failed login attempts.
+
+**Solution**: Wait 1 minute. Rate limit is 5 attempts per minute per IP.
 
 ---
 

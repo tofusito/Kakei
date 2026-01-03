@@ -9,6 +9,7 @@ import { TransactionFilters } from './components/TransactionFilters';
 import { TransactionList } from './components/TransactionList';
 import { ThemeDropdown } from './components/ThemeDropdown';
 import { EditTransactionModal } from './components/EditTransactionModal';
+import { Login } from './components/Login';
 
 import { useTheme } from './hooks/useTheme';
 import { useDashboard } from './hooks/useDashboard';
@@ -18,8 +19,11 @@ import type { Category, TransactionType, Transaction } from './types';
 
 // Setup axios defaults
 axios.defaults.baseURL = '/api';
+axios.defaults.withCredentials = true; // Importante para enviar cookies
 
 function App() {
+    // Estado de autenticación
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null); // null = verificando
     // Custom Hooks
     const { theme, setTheme, setLanguage, isDarkMode, showThemeMenu, setShowThemeMenu } = useTheme();
     const { dashboard, classificationBreakdown, fetchDashboardData } = useDashboard();
@@ -42,10 +46,23 @@ function App() {
     const [showBreakdown, setShowBreakdown] = useState(false);
     const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
 
-    // Fetch categories on mount
+    // Verificar autenticación al cargar
     useEffect(() => {
-        axios.get('/categories').then(res => setCategories(res.data)).catch(console.error);
+        axios.get('/auth/check', { withCredentials: true })
+            .then(res => {
+                setIsAuthenticated(res.data.authenticated);
+            })
+            .catch(() => {
+                setIsAuthenticated(false);
+            });
     }, []);
+
+    // Fetch categories on mount (solo si está autenticado)
+    useEffect(() => {
+        if (isAuthenticated) {
+            axios.get('/categories').then(res => setCategories(res.data)).catch(console.error);
+        }
+    }, [isAuthenticated]);
 
     const handleOpenQuickAdd = (type: TransactionType) => {
         console.log('Opening QuickAdd for:', type);
@@ -53,6 +70,30 @@ function App() {
         setShowQuickAdd(true);
     };
 
+    const handleLoginSuccess = () => {
+        setIsAuthenticated(true);
+    };
+
+    // Mostrar loading mientras se verifica la autenticación
+    if (isAuthenticated === null) {
+        return (
+            <div className="min-h-screen bg-black flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-2xl mb-4 mx-auto animate-pulse">
+                        <span className="text-2xl font-bold text-white">家</span>
+                    </div>
+                    <p className="text-gray-400">Loading...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Mostrar login si no está autenticado
+    if (!isAuthenticated) {
+        return <Login onLoginSuccess={handleLoginSuccess} />;
+    }
+
+    // Dashboard principal (solo si está autenticado)
     return (
         <div className={clsx(
             "min-h-screen transition-colors duration-300 font-sans selection:bg-rose-500/30",
