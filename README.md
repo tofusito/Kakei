@@ -72,26 +72,32 @@
 
 ---
 
-### � Visual Dashboard
+### 📊 Visual Dashboard
 <div align="center">
   <img src="assets/dashboard_light.png" alt="Light Mode" width="45%">
   <img src="assets/dashboard_dark.png" alt="Dark Mode" width="45%">
 </div>
 
-### � Expense Breakdown
+### 📈 Global Summary
+<div align="center">
+  <img src="assets/global_summary_light.png" alt="Global Summary Light" width="45%">
+  <img src="assets/global_summary_dark.png" alt="Global Summary Dark" width="45%">
+</div>
+
+### 🍩 Expense Breakdown
 <div align="center">
   <img src="assets/classification_breakdown.png" alt="Classification Breakdown" width="60%">
 </div>
 
-### �💸 Frictionless Entry
+### ⚡ Frictionless Entry
 <div align="center">
   <img src="assets/modal_expense_dark.png" alt="Expense Entry" width="45%">
   <img src="assets/expense_classification.png" alt="Expense Classification" width="45%">
 </div>
 
-### 🔍 Detailed History
+### 📜 Detailed History
 <div align="center">
-  <img src="assets/transaction_history_scrolled.png" alt="Transaction History" width="90%">
+  <img src="assets/transaction_history.png" alt="Transaction History" width="90%">
 </div>
 
 ---
