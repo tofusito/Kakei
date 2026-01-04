@@ -4,8 +4,7 @@
 
 # KAKEI (家計)
 
-> **Philosophy**: Stoic. Minimalist. Frictionless.  
-> *"Wealth consists not in having great possessions, but in having few wants."* — Epictetus
+> **Philosophy**: Minimalist. Frictionless.  
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
