@@ -10,6 +10,7 @@ import { dashboardRoutes } from './routes/dashboard';
 import { transactionRoutes } from './routes/transactions';
 import { settingsRoutes } from './routes/settings';
 import { authRoutes } from './routes/auth';
+import { summaryRoutes } from './routes/summary';
 import { authMiddleware } from './middleware/auth';
 
 const app = new Elysia()
@@ -48,6 +49,7 @@ const app = new Elysia()
     .use(dashboardRoutes)
     .use(transactionRoutes)
     .use(settingsRoutes)
+    .use(summaryRoutes)
     // 3. Static Files - Icons and Assets
     .get('/apple-touch-icon.png', () => Bun.file('public/apple-touch-icon.png'))
     .get('/favicon.png', () => Bun.file('public/favicon.png'))

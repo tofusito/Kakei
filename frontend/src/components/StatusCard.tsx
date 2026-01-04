@@ -8,12 +8,13 @@ interface StatusCardProps {
     dashboard: DashboardData;
     breakdown: ClassificationBreakdown;
     onBreakdownClick: () => void;
+    onChartClick: () => void;
     isDarkMode: boolean;
 }
 
 import { ExpenseRing } from './ExpenseRing';
 
-export function StatusCard({ dashboard, breakdown, onBreakdownClick, isDarkMode }: StatusCardProps) {
+export function StatusCard({ dashboard, breakdown, onBreakdownClick, onChartClick, isDarkMode }: StatusCardProps) {
     const { t } = useTranslation();
 
     return (
@@ -53,7 +54,10 @@ export function StatusCard({ dashboard, breakdown, onBreakdownClick, isDarkMode 
                         </div>
                     </div>
 
-                    <div className="h-20 w-full mb-6">
+                    <div 
+                        className="h-20 w-full mb-6 cursor-pointer transition-opacity hover:opacity-80 active:scale-[0.98]"
+                        onClick={onChartClick}
+                    >
                         <ResponsiveContainer width="100%" height="100%">
                             <AreaChart data={dashboard.chartData}>
                                 <Area

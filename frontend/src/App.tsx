@@ -10,12 +10,14 @@ import { TransactionList } from './components/TransactionList';
 import { ThemeDropdown } from './components/ThemeDropdown';
 import { EditTransactionModal } from './components/EditTransactionModal';
 import { Login } from './components/Login';
+import { GlobalSummary } from './components/GlobalSummary';
 
 import { useTheme } from './hooks/useTheme';
 import { useDashboard } from './hooks/useDashboard';
 import { useTransactions } from './hooks/useTransactions';
 
 import type { Category, TransactionType, Transaction } from './types';
+import { BarChart3 } from 'lucide-react';
 
 // Setup axios defaults
 axios.defaults.baseURL = '/api';
@@ -45,6 +47,7 @@ function App() {
     const [quickAddType, setQuickAddType] = useState<TransactionType>('expense');
     const [showBreakdown, setShowBreakdown] = useState(false);
     const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+    const [currentView, setCurrentView] = useState<'dashboard' | 'summary'>('dashboard');
 
     // Verificar autenticación al cargar
     useEffect(() => {
@@ -93,6 +96,16 @@ function App() {
         return <Login onLoginSuccess={handleLoginSuccess} />;
     }
 
+    // Vista de Resumen Global
+    if (currentView === 'summary') {
+        return (
+            <GlobalSummary
+                onBack={() => setCurrentView('dashboard')}
+                isDarkMode={isDarkMode}
+            />
+        );
+    }
+
     // Dashboard principal (solo si está autenticado)
     return (
         <div className={clsx(
@@ -111,14 +124,28 @@ function App() {
                             Kakei
                         </span>
                     </div>
-                    <ThemeDropdown
-                        theme={theme}
-                        setTheme={setTheme}
-                        setLanguage={setLanguage}
-                        showThemeMenu={showThemeMenu}
-                        setShowThemeMenu={setShowThemeMenu}
-                        isDarkMode={isDarkMode}
-                    />
+                    <div className="flex items-center gap-2">
+                        {/* Summary Button */}
+                        <button
+                            onClick={() => setCurrentView('summary')}
+                            className={clsx(
+                                "p-2 rounded-xl transition-all duration-200 active:scale-95",
+                                isDarkMode
+                                    ? "bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-orange-400"
+                                    : "bg-zinc-100 hover:bg-zinc-200 text-zinc-600 hover:text-orange-500"
+                            )}
+                        >
+                            <BarChart3 size={18} />
+                        </button>
+                        <ThemeDropdown
+                            theme={theme}
+                            setTheme={setTheme}
+                            setLanguage={setLanguage}
+                            showThemeMenu={showThemeMenu}
+                            setShowThemeMenu={setShowThemeMenu}
+                            isDarkMode={isDarkMode}
+                        />
+                    </div>
                 </header>
 
                 <main className="px-6 pb-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -127,6 +154,7 @@ function App() {
                         dashboard={dashboard}
                         breakdown={classificationBreakdown}
                         onBreakdownClick={() => setShowBreakdown(true)}
+                        onChartClick={() => setCurrentView('summary')}
                         isDarkMode={isDarkMode}
                     />
 
